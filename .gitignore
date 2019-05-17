@@ -1,3 +1,4 @@
 *.xlsm
 *.xlsx
 *.pyc
+test.egg-info/*
