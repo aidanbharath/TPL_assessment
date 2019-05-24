@@ -6,7 +6,12 @@ from dash.dependencies import Input, Output, State
 from pyfladesk import init_gui
 
 from LayoutBase import colors, header, top_Divs_Base, bot_Divs_Base
-from load import base_load_template
+from load import (base_load_template,
+					create_user_template,
+					load_user_template,
+					save_user_template)
+
+import pandas as pd
 
 app = dash.Dash(__name__,static_folder='static')
 
@@ -17,7 +22,7 @@ app.config.suppress_callback_exceptions = False
 external_css = [
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",
     "https://cdn.rawgit.com/plotly/dash-app-stylesheets/2d266c578d2a6e8850ebce48fdb52759b2aef506/stylesheet-oil-and-gas.css",
-    "https://cdn.rawgit.com/amadoukane96/8f29daabc5cacb0b7e77707fc1956373/raw/854b1dc5d8b25cd2c36002e1e4f598f5f4ebeee3/test.css",
+    #"https://cdn.rawgit.com/amadoukane96/8f29daabc5cacb0b7e77707fc1956373/raw/854b1dc5d8b25cd2c36002e1e4f598f5f4ebeee3/test.css",
     "https://use.fontawesome.com/releases/v5.2.0/css/all.css"
 ]
 
@@ -25,7 +30,8 @@ for css in external_css:
     app.css.append_css({"external_url": css})
 
 
-app.layout = html.Div([header(),top_Divs_Base(),bot_Divs_Base()],id='full-div')
+app.layout = html.Div([header(),top_Divs_Base(),bot_Divs_Base()],
+						id='full-div',style={'background':'#F0FEFE'},)
 
 
 
@@ -41,9 +47,10 @@ the basefile are automatically accounted for in the app.
                 [Input('standard-load-button','n_clicks')],
                 [State('tpl-assessment-store','data')])
 def load_base_tpl_assessment_package(click, data):
-    if click and not data:
-        baseTemplate = base_load_template()
-        return baseTemplate.index.get_level_values(0).unique().values
+	if click and not data:
+		baseTemplate = base_load_template()
+		create_user_template(baseTemplate)
+		return baseTemplate.index.get_level_values(0).unique().values
 
 
 @app.callback(Output('capabilities-store','data'),
@@ -236,9 +243,13 @@ def set_question_dropdown(value):
                 State('subCats-store','data')])
 def disp_question(qn,qdata,sdata,ndata,value):
 
+	style={'textAlign': 'center',
+			'color': colors['text']
+		}
 	
 	if qn is not None:
 		baseTemplate = base_load_template()
+		ut = load_user_template()
 		try:
 			cols = ('Question Group Description','Question','Background','High','Medium','Low')
 			qgrp = baseTemplate.loc[value].loc[ndata].loc[sdata,cols]
@@ -248,32 +259,115 @@ def disp_question(qn,qdata,sdata,ndata,value):
 			h,m,l = (qGroup['High'].iloc[qn],
 					qGroup['Medium'].iloc[qn],
 					qGroup['Low'].iloc[qn])
+			ut_Values = ut.loc[value].loc[ndata].loc[sdata].iloc[qn]
 		except (AttributeError,ValueError) as e:
 			qgrp = baseTemplate.loc[value].loc[ndata].loc[sdata]
 			question = qgrp.loc['Question']
 			background = qgrp.loc['Background']
-			h,m,l = (qGroup.loc['High'],
-					qGroup.loc['Medium'],
-					qGroup.loc['Low'])
+			h,m,l = (qgrp.loc['High'],
+					qgrp.loc['Medium'],
+					qgrp.loc['Low'])
+			ut_Values = ut.loc[value].loc[ndata].loc[sdata]
 
+		net = ut_Values['Score']*ut_Values['Weight']
 		return	[html.H6(f'Question {qn+1}'),
+				html.Div(id='net-score-div'),
 				html.Div(question),
-				html.Div(
-					dcc.ConfirmDialogProvider(
-					children=html.Button('Background'),
-					id='background-button',
-					message=background),
-				className='three columns'),
-				html.Div(
-					dcc.ConfirmDialogProvider(
-					children=html.Button('Score Guidance'),
-					id='score-button',
-					message=f'High: {h} \nMedium: {m} \nLow: {l}'),
-				className='three columns')
+				html.Div([
+					html.Div([
+						dcc.ConfirmDialogProvider(
+						children=html.Button('Background',
+									className='twelve columns'),
+						id='background-button',
+						message=background),
+						dcc.ConfirmDialogProvider(
+						children=html.Button('Score Guidance',
+									className='twelve columns'),
+						id='score-button',
+						message=f'High: {h} \n\nMedium: {m} \n\nLow: {l}')
+					],className='twelve columns'),
+					html.Div([
+						html.Div([html.Div(children='Score', 
+									style=style),
+								html.Div(children='(0-10)', 
+									style=style),
+									dcc.Input(placeholder='Enter your Score',
+											id='question-score',
+											type='number',
+											value=ut_Values['Score'],
+											min=0,max=10,
+											debounce = True,
+											className='twelve columns'
+									)],className='six columns'),
+						html.Div([html.Div(children='Value Weighting', 
+									style=style),
+									html.Div(children='(0-1)', 
+									style=style),
+									dcc.Input(placeholder='Enter your Weighting',
+											id='question-weight',
+											type='number',
+											value=ut_Values['Weight'],
+											min=0,max=1,
+											debounce = True,
+											className='twelve columns'
+									)
+									],className='six columns'),
+								html.Button('Submit Score',
+										id = 'score-sub-button',
+										className='twelve columns')
+					],className='twelve columns')
+				],className='twelve columns')
 				
 				]
 
 
+@app.callback(Output('dummy-out-1','children'),
+                [Input('score-sub-button','n_clicks')],
+				[State('question-score','value'),
+				State('question-weight','value'),
+				State('numQuestions-dropdown','value'),
+				State('qGroup-store','data'),
+				State('specificC-store','data'),
+                State('narrowC-store','data'),
+                State('subCats-store','data')])
+def sub_new_scores(click,score,weight,qn,qdata,sdata,ndata,value):
+	if click:
+		ut = load_user_template()
+
+		try:
+			ut.loc[value,ndata,sdata].iloc[qn]['Score'] = score
+			ut.loc[value,ndata,sdata].iloc[qn]['Weight'] = weight
+
+		except (AttributeError,ValueError) as e:
+			ut.loc[value,ndata,sdata]['Score'] = score
+			ut.loc[value,ndata,sdata]['Weight'] = weight
+
+		save_user_template(ut)
+
+@app.callback(Output('net-score-div','children'),
+                [Input('score-sub-button','n_clicks')],
+				[State('question-score','value'),
+				State('question-weight','value'),
+				State('numQuestions-dropdown','value'),
+				State('qGroup-store','data'),
+				State('specificC-store','data'),
+                State('narrowC-store','data'),
+                State('subCats-store','data')])
+def set_net_score(click,score,weight,qn,qdata,sdata,ndata,value):
+	if click:
+		return html.H6(f'Net Score:  {score*weight}')
+	else:
+		ut = load_user_template()
+
+		try:
+			score = ut.loc[value,ndata,sdata].iloc[qn]['Score']
+			weight = ut.loc[value,ndata,sdata].iloc[qn]['Weight']
+
+		except (AttributeError,ValueError) as e:
+			score = ut.loc[value,ndata,sdata]['Score']
+			weight = ut.loc[value,ndata,sdata]['Weight']
+
+		return html.H6(f'Net Score:  {score*weight}')
 
 
 
@@ -283,6 +377,7 @@ def disp_question(qn,qdata,sdata,ndata,value):
 
 if __name__ == '__main__':
     ## Run in Browser
-    app.run()
+    #app.run()
     ## run standalone
-    #init_gui(app,window_title='TPL Assessment Stand Alone Tool')
+    init_gui(app,window_title='TPL Assessment Stand Alone Tool',
+				width=800,height=800,icon='./images/logo.png')
