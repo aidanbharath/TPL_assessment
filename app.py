@@ -13,7 +13,7 @@ app = dash.Dash(__name__,static_folder='static')
 
 server = app.server
 app.run = app.run_server
-app.config.suppress_callback_exceptions = True
+app.config.suppress_callback_exceptions = False
 
 external_css = [
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",
@@ -45,27 +45,15 @@ def load_base_tpl_assessment_package(click, data):
     if click and not data:
         baseTemplate = base_load_template()
         return baseTemplate.index.get_level_values(0).unique().values
-    
+ 
+
 # Begin new callback for plot
     
 @app.callback(Output('q1-holdernew','children'),
                 [Input('tpl-assessment-store','data')])
-                 
 def set_tpl_assessment_plot(capabilities):
     if capabilities:
-        #{{
-                                     #  'data': [{'value':[10,10,10,10,10,10,10],'type':'pie'}],
-                                      #  'layout': {
-                                      #          'title': 'Dash Data Visualization'
-                                       #             },
-                                        #        'legend': {'x': 0, 'y': 1, 'z': 2,'c':3, 'g':4, 'f':5, 'u':6}
-                                    #    }#,
-             #   }
-#      #
-##                                id='test-graph',  
-                               #   )
-##                                    id='left-div-new'
-                         # ],className='eleven columns')  
+       
         print(capabilities)
         plot_options=[{'label':capabilities,'value':[10,10,10,10,10,10,10],'type':'pie',}]
         print(plot_options)
@@ -76,11 +64,11 @@ def set_tpl_assessment_plot(capabilities):
                         html.Div(dcc.Graph(
                                 id='test-graph',
                                 figure={
-                                       'data': [{'values': [10,10,10,10,10,10,10],'type' : 'pie',},],
+                                       'data': [{'labels': capabilities,'values': [10,10,10,10,10,10,10],'type' : 'pie',
+                                                 'hoverinfo':'labels',},],
                                         'layout': {
-                                                'title': 'Dash Data Visualization-2'
-                                                    },
-                                                'legend': {'x': 0, 'y': 1, 'z': 2}
+                                                'title': 'Dash Data Visualization-2',
+                                                'showlegend': False},
                                         }
         
                                     )
@@ -92,29 +80,7 @@ def set_tpl_assessment_plot(capabilities):
                         className='eleven columns'
                         ),             
                         
-#                                                #layout=go.Layout(
-#                                                       # title='US Export of Plastic Scrap',
-#                                                      #  showlegend=True,
-#                                                      #  legend=go.layout.Legend(
-#                                                       #         x=0,
-#                                                        #        y=1.0
-#                                                        #        ),
-#                                                        #margin=go.layout.Margin(l=40, r=0, t=40, b=30)
-#                                                      #  )
-                                             #  )
-                                   # style={'height': 300},
-                                   # id='my-graph'
- 
-                                    
-                                                   
-#        return {
-#                 "data": [go.Pie(labels=capabilities, values=[10,10,10,10,10,10,10],
-#                        marker={'colors': ['#EF963B', '#C93277', '#349600', '#EF533B', '#57D4F1']}, textinfo='label')],
-#                 "layout": go.Layout(title=f"Data Visulization", margin={"l": 300, "r": 300, },
-#                            legend={"x": 1, "y": 2})} 
-		
-	#else:
-		#return  
+
 #end plot callback
 
 @app.callback(Output('capabilities-store','data'),
