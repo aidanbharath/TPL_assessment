@@ -6,7 +6,7 @@ import plotly.graph_objs as go
 
 from pyfladesk import init_gui
 
-from LayoutBase import colors, header, top_Divs_Base, bot_Divs_Base
+from LayoutBase import colors, header, top_Divs_Base, bot_Divs_Base,bot_Divs_Base2
 from load import (base_load_template,
 					create_user_template,
 					load_user_template,
@@ -35,7 +35,7 @@ for css in external_css:
 
 
 
-app.layout = html.Div([header(),top_Divs_Base(),bot_Divs_Base()],
+app.layout = html.Div([header(),top_Divs_Base(),bot_Divs_Base(),bot_Divs_Base2()],
 						id='full-div',style={'background':'#F0FEFE'},)
 
 
