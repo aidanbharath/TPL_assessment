@@ -10,6 +10,9 @@ from load import (base_load_template,
 					create_user_template,
 					load_user_template,
 					save_user_template)
+from calculate import (calc_input_scores,
+						calc_second_level_group_score,
+						calc_third_level_group_score)
 
 import pandas as pd
 
@@ -272,6 +275,18 @@ def disp_question(qn,qdata,sdata,ndata,value):
 		net = ut_Values['Score']*ut_Values['Weight']
 		return	[html.H6(f'Question {qn+1}'),
 				html.Div(id='net-score-div'),
+				html.Div([
+					html.Div([f'Contribution to {sdata} Score:'],
+							className='eight columns'),
+					dcc.Input(placeholder='Enter your Score',
+								id='contribution-weight',
+								type='number',
+								value=ut_Values['SpecCap Weight'],
+								min=0,max=10,
+								debounce = True,
+								className='four columns')
+				],
+				className='twelve columns'),
 				html.Div(question),
 				html.Div([
 					html.Div([
@@ -337,10 +352,12 @@ def sub_new_scores(click,score,weight,qn,qdata,sdata,ndata,value):
 		try:
 			ut.loc[value,ndata,sdata].iloc[qn]['Score'] = score
 			ut.loc[value,ndata,sdata].iloc[qn]['Weight'] = weight
+			ut.loc[value,ndata,sdata].iloc[qn]['Input Score'] = score*weight
 
 		except (AttributeError,ValueError) as e:
 			ut.loc[value,ndata,sdata]['Score'] = score
 			ut.loc[value,ndata,sdata]['Weight'] = weight
+			ut.loc[value,ndata,sdata]['Input Score'] = score*weight
 
 		save_user_template(ut)
 
@@ -353,23 +370,39 @@ def sub_new_scores(click,score,weight,qn,qdata,sdata,ndata,value):
 				State('specificC-store','data'),
                 State('narrowC-store','data'),
                 State('subCats-store','data')])
-def set_net_score(click,score,weight,qn,qdata,sdata,ndata,value):
+def set_input_score(click,score,weight,qn,qdata,sdata,ndata,value):
 	if click:
-		return html.H6(f'Net Score:  {score*weight}')
+		net = score*weight
+		return html.H6(f'Question Score:  {net}')
 	else:
 		ut = load_user_template()
 
 		try:
-			score = ut.loc[value,ndata,sdata].iloc[qn]['Score']
-			weight = ut.loc[value,ndata,sdata].iloc[qn]['Weight']
+			net = ut.loc[value,ndata,sdata].iloc[qn]['Input Score']
 
 		except (AttributeError,ValueError) as e:
-			score = ut.loc[value,ndata,sdata]['Score']
-			weight = ut.loc[value,ndata,sdata]['Weight']
+			net = ut.loc[value,ndata,sdata]['Input Score']
+			
+		return html.H6(f'Question Score:  {net}')
 
-		return html.H6(f'Net Score:  {score*weight}')
+@app.callback(Output('dummy-out-2','children'),
+                [Input('contribution-weight','value')],
+				[State('numQuestions-dropdown','value'),
+				State('qGroup-store','data'),
+				State('specificC-store','data'),
+                State('narrowC-store','data'),
+                State('subCats-store','data')])
+def sub_new_scores(spWeight,qn,qdata,sdata,ndata,value):
+	if value:
+		ut = load_user_template()
 
+		try:
+			ut.loc[value,ndata,sdata].iloc[qn]['SpecCap Weight'] = spWeight
 
+		except (AttributeError,ValueError) as e:
+			ut.loc[value,ndata,sdata]['SpecCap Weight'] = spWeight
+
+		save_user_template(ut)
 
 
 
