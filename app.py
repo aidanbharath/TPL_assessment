@@ -2,16 +2,18 @@ import dash
 import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output, State
+import plotly.graph_objs as go
 
 from pyfladesk import init_gui
 
-from LayoutBase import colors, header, top_Divs_Base, bot_Divs_Base
+from LayoutBase import colors, header, top_Divs_Base, bot_Divs_Base,bot_Divs_Base2
 from load import (base_load_template,
 					create_user_template,
 					load_user_template,
 					save_user_template)
 
 import pandas as pd
+
 
 app = dash.Dash(__name__,static_folder='static')
 
@@ -30,8 +32,12 @@ for css in external_css:
     app.css.append_css({"external_url": css})
 
 
-app.layout = html.Div([header(),top_Divs_Base(),bot_Divs_Base()],
+
+
+
+app.layout = html.Div([header(),top_Divs_Base(),bot_Divs_Base(),bot_Divs_Base2()],
 						id='full-div',style={'background':'#F0FEFE'},)
+
 
 
 
@@ -47,17 +53,58 @@ the basefile are automatically accounted for in the app.
                 [Input('standard-load-button','n_clicks')],
                 [State('tpl-assessment-store','data')])
 def load_base_tpl_assessment_package(click, data):
+
 	if click and not data:
 		baseTemplate = base_load_template()
 		create_user_template(baseTemplate)
 		return baseTemplate.index.get_level_values(0).unique().values
 
 
+# Begin new callback for plot
+    
+@app.callback(Output('q1-holdernew','children'),
+                [Input('tpl-assessment-store','data')])
+def set_tpl_assessment_plot(capabilities):
+    if capabilities:
+       
+        print(capabilities)
+        plot_options=[{'label':capabilities,'value':[10,10,10,10,10,10,10],'type':'pie',}]
+        print(plot_options)
+        
+        return html.Div([
+                        
+                        #dcc.Graph(id='test-graph'),
+                        html.Div(dcc.Graph(
+                                id='test-graph',
+                                figure={
+                                       'data': [{'labels': capabilities,'values': [10,10,10,10,10,10,10],'type' : 'pie',
+                                                 'hoverinfo':'labels',},],
+                                        'layout': {
+                                                'title': 'Dash Data Visualization-2',
+                                                'showlegend': False},
+                                        }
+        
+                                    )
+                               # id='left-div-new'
+                                )
+                        
+                                ],
+                               # id='q1-holdernew',
+                        className='eleven columns'
+                        ),             
+                        
+
+#end plot callback
+
 @app.callback(Output('capabilities-store','data'),
                 [Input('tpl-assessment-store','data')])
 def set_tpl_assessment_options(capabilities):
     if capabilities:
+        
         return [{'label':names,'value':names} for names in capabilities]
+    
+
+
 
 
 @app.callback(Output('capabilities-dropdown-div','children'),
@@ -379,5 +426,7 @@ if __name__ == '__main__':
     ## Run in Browser
     #app.run()
     ## run standalone
+
     init_gui(app,window_title='TPL Assessment Stand Alone Tool',
 				width=800,height=800,icon='./images/logo.png')
+

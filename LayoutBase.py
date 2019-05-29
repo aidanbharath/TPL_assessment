@@ -1,6 +1,8 @@
 import dash
 import dash_html_components as html
 import dash_core_components as dcc
+import plotly.graph_objs as go
+#import dash_bootstrap_components as dbc
 
 import base64
 
@@ -84,8 +86,10 @@ def bot_Divs_Base():
                                 html.Div(left_div_preamble(),
                                 id='left-div',
                                 hidden=True,
+
                                 className='twelve columns'),
 								html.Div([
+
                                 html.Div([
                                         html.Div(id='bot-left-div-1',
                                         className='twelve columns'),
@@ -93,11 +97,13 @@ def bot_Divs_Base():
                                         className='twelve columns'),
                                         html.Div([
                                                 dcc.Dropdown(id='numQuestions-dropdown',
+
 															options=[{'label':'noQ','value':'noQ'}],
 															value=None,
 															placeholder="Select Question"
 															),
                                         ],id='bot-left-div-3',
+
                                         className='twelve columns')
                                         ],id='bot-left-div',
                                         className='six columns'),
@@ -115,6 +121,28 @@ def bot_Divs_Base():
                                 className='six columns')
                         ]),
 						],
+                        className='twelve columns'
+                )
+        return div
+    
+def bot_Divs_Base2():
+        div = html.Div(id='bot-background-div2',
+                        children=[
+                                html.Div([
+                                        html.Div(id='bot-right-div-6',
+                                        className='twelve columns'),
+                                        html.Div(id='bot-right-div-7',
+                                        className='twelve columns'),
+                                        html.Div(id='bot-right-div-8',
+                                        className='twleve columns'),                                        
+                                        html.Div(right_div_preamble(),
+                                        id='right-div',
+                                        hidden=False,
+                                        className='six columns'
+                                        , style={'marginleft': 5000000000000000, 'marginTop': 25}) 
+                                        ],
+                                        ),                                      
+                                        ],
                         className='twelve columns'
                 )
         return div
@@ -159,6 +187,48 @@ def left_div_preamble():
                         )
         ]
 
+
+def right_div_preamble():
+    
+        return [html.Div(#[
+#                        html.H5('Plot:'),
+#                       # dcc.Graph(id='test-graph'),
+#                        html.Div(dcc.Graph(
+#                                id='test-graph',
+#                                figure={
+#                                       'data': [{'values': [20,20,20,20],'type' : 'pie'}],
+#                                        'layout': {
+#                                                'title': 'Dash Data Visualization'
+#                                                    },
+#                                                'legend': {'x': 0, 'y': 1, 'z': 2}
+#                                        }
+#        
+#                                    )
+#                               # id='left-div-new'
+#                                )
+#                        
+#                                ],
+                                id='q1-holdernew',
+                        className='eleven columns'
+                        ),             
+                        
+#                                                #layout=go.Layout(
+#                                                       # title='US Export of Plastic Scrap',
+#                                                      #  showlegend=True,
+#                                                      #  legend=go.layout.Legend(
+#                                                       #         x=0,
+#                                                        #        y=1.0
+#                                                        #        ),
+#                                                        #margin=go.layout.Margin(l=40, r=0, t=40, b=30)
+#                                                      #  )
+                                             #  )
+                                   # style={'height': 300},
+                                   # id='my-graph'
+ 
+                                    
+                                    ]                                                                
+                            
+
 def bot_right_div_1_preamble():
         return [html.Div(id='net-score-div'),
 				html.Div([
@@ -199,6 +269,7 @@ def bot_right_div_1_preamble():
 				],className='twelve columns')
 				
 				]
+
 
 
 
