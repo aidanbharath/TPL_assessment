@@ -76,20 +76,22 @@ def set_tpl_assessment_plot(capabilities):
         #print(plot_options)
         df=calc_input_scores()
         df2=calc_third_level_group_score()
-        
-       
+        df3=calc_second_level_group_score()
+        trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+        trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+        print(df3['Net'])
         
         return html.Div([
                         
                         #dcc.Graph(id='test-graph'),
                         html.Div(dcc.Graph(
                                 id='test-graph',
-                                figure={
-                                       'data': [{'x': capabilities,'y': df2[capabilities],'type' : 'bar',
-                                                 'hoverinfo':'labels',},],
+                                figure={ 'data' : [trace1,trace2],
+                                       #'data': [{'x': capabilities,'y': df2[capabilities],'type' : 'bar',
+                                        #         'hoverinfo':'labels',},],
                                         'layout': {
                                                 'title': 'TPL Capabilities',
-                                                'showlegend': False},
+                                                'showlegend': False, 'barmode': 'stack'},
                                         }
         
                                     )
