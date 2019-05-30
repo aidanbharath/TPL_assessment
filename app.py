@@ -56,11 +56,12 @@ the basefile are automatically accounted for in the app.
                 [Input('standard-load-button','n_clicks')],
                 [State('tpl-assessment-store','data')])
 def load_base_tpl_assessment_package(click, data):
-
-	if click and not data:
-		baseTemplate = base_load_template()
-		create_user_template(baseTemplate)
-		return baseTemplate.index.get_level_values(0).unique().values
+    if click and not data:
+        baseTemplate = base_load_template()
+        create_user_template(baseTemplate)
+        
+    
+        return baseTemplate.index.get_level_values(0).unique().values
 
 
 # Begin new callback for plot
@@ -70,9 +71,13 @@ def load_base_tpl_assessment_package(click, data):
 def set_tpl_assessment_plot(capabilities):
     if capabilities:
        
-        print(capabilities)
+        
         plot_options=[{'label':capabilities,'value':[10,10,10,10,10,10,10],'type':'pie',}]
-        print(plot_options)
+        #print(plot_options)
+        df=calc_input_scores()
+        df2=calc_third_level_group_score()
+        
+       
         
         return html.Div([
                         
@@ -80,7 +85,7 @@ def set_tpl_assessment_plot(capabilities):
                         html.Div(dcc.Graph(
                                 id='test-graph',
                                 figure={
-                                       'data': [{'labels': capabilities,'values': [10,10,10,10,10,10,10],'type' : 'pie',
+                                       'data': [{'labels': capabilities,'values': df2[capabilities],'type' : 'pie',
                                                  'hoverinfo':'labels',},],
                                         'layout': {
                                                 'title': 'Dash Data Visualization-2',
