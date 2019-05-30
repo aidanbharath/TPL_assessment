@@ -38,7 +38,8 @@ def header():
                         dcc.Store(id='qGroup-store',storage_type='local'),
                         dcc.Store(id='qChoiceGroup-store',storage_type='local'),
                         dcc.Store(id='qChoice-store',storage_type='local'),
-						html.Div(id='dummy-out-1', style={'display':'none'})
+						html.Div(id='dummy-out-1', style={'display':'none'}),
+						html.Div(id='dummy-out-2', style={'display':'none'})
                         ]
         )
         return div
@@ -231,6 +232,13 @@ def right_div_preamble():
 
 def bot_right_div_1_preamble():
         return [html.Div(id='net-score-div'),
+						dcc.Input(placeholder='Enter your Score',
+								id='contribution-weight',
+								type='number',
+								value=0,
+								min=0,max=10,
+								debounce = True,
+								className='four columns'),
 				html.Div([
 					html.Div([
 						dcc.ConfirmDialogProvider(
