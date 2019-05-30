@@ -85,10 +85,10 @@ def set_tpl_assessment_plot(capabilities):
                         html.Div(dcc.Graph(
                                 id='test-graph',
                                 figure={
-                                       'data': [{'labels': capabilities,'values': df2[capabilities],'type' : 'pie',
+                                       'data': [{'x': capabilities,'y': df2[capabilities],'type' : 'bar',
                                                  'hoverinfo':'labels',},],
                                         'layout': {
-                                                'title': 'Dash Data Visualization-2',
+                                                'title': 'TPL Capabilities',
                                                 'showlegend': False},
                                         }
         
