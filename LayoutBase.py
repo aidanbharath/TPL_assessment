@@ -211,7 +211,8 @@ def right_div_preamble():
 #                                ],
                                 id='q1-holdernew',
                         className='eleven columns'
-                        ),             
+                        ),
+                    html.Div(id='q2-holdernew',className='eleven columns'),
                         
 #                                                #layout=go.Layout(
 #                                                       # title='US Export of Plastic Scrap',
