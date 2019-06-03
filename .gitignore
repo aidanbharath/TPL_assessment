@@ -2,3 +2,8 @@
 *.xlsx
 *.pyc
 test.egg-info/*
+*.exe
+*.spec
+**/build
+**./dist/
+
