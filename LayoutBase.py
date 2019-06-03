@@ -194,39 +194,14 @@ def right_div_preamble():
         return [html.Div(#[
 #                        html.H5('Plot:'),
                         html.Div(id='test-graph'),
-#                        html.Div(dcc.Graph(
-#                                id='test-graph',
-#                                figure={
-#                                       'data': [{'values': [20,20,20,20],'type' : 'pie'}],
-#                                        'layout': {
-#                                                'title': 'Dash Data Visualization'
-#                                                    },
-#                                                'legend': {'x': 0, 'y': 1, 'z': 2}
-#                                        }
-#        
-#                                    )
-#                               # id='left-div-new'
-#                                )
 #                        
-#                                ],
                                 id='q1-holdernew',
                         className='eleven columns'
                         ),
                     html.Div(id='q2-holdernew',className='eleven columns'),
                     html.Div(id='q3-holdernew',className='eleven columns'),
                         
-#                                                #layout=go.Layout(
-#                                                       # title='US Export of Plastic Scrap',
-#                                                      #  showlegend=True,
-#                                                      #  legend=go.layout.Legend(
-#                                                       #         x=0,
-#                                                        #        y=1.0
-#                                                        #        ),
-#                                                        #margin=go.layout.Margin(l=40, r=0, t=40, b=30)
-#                                                      #  )
-                                             #  )
-                                   # style={'height': 300},
-                                   # id='my-graph'
+#                                               
  
                                     
                                     ]                                                                
