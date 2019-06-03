@@ -193,7 +193,7 @@ def right_div_preamble():
     
         return [html.Div(#[
 #                        html.H5('Plot:'),
-#                       # dcc.Graph(id='test-graph'),
+                        html.Div(id='test-graph'),
 #                        html.Div(dcc.Graph(
 #                                id='test-graph',
 #                                figure={
@@ -213,6 +213,7 @@ def right_div_preamble():
                         className='eleven columns'
                         ),
                     html.Div(id='q2-holdernew',className='eleven columns'),
+                    html.Div(id='q3-holdernew',className='eleven columns'),
                         
 #                                                #layout=go.Layout(
 #                                                       # title='US Export of Plastic Scrap',

@@ -146,7 +146,7 @@ def set_tpl_assessment_topLevel_dropDown(options,Div):
 @app.callback(Output('q2-holdernew','children'),
                 [Input('capabilities-dropdown','value')])
 def set_tpl_assessment_plot_subcat(options):
-    if options:
+    while options:
        
         
        # plot_options=[{'label':capabilities,'value':[10,10,10,10,10,10,10],'type':'pie',}]
@@ -163,11 +163,11 @@ def set_tpl_assessment_plot_subcat(options):
         baseTemplate = base_load_template()
         subCats = baseTemplate.loc[options].index.get_level_values(0).unique().values
 #            cats=np.append([cats],[subCats])
-        print(df3.loc[options,'Score'])    
+        #print(df3.loc[options,'Score'])    
        # trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
         #trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
         #print(df3['Net'])
-        
+   
         return html.Div([
                         
                         #dcc.Graph(id='test-graph'),
@@ -243,20 +243,20 @@ def set_tpl_assessment_second_level_selection_1(value):
                 [State('subCats-store','data')])
 def set_tpl_assessment_second_level_selection_2(ndata,value):
 
-	if ndata:
+    if ndata:
 
-		baseTemplate = base_load_template()
-		subCats = baseTemplate.loc[value].loc[ndata].index.get_level_values(0).unique().values
-		options = [{'label':subcat,'value':subcat} for subcat in subCats]
+        baseTemplate = base_load_template()
+        subCats = baseTemplate.loc[value].loc[ndata].index.get_level_values(0).unique().values
+        options = [{'label':subcat,'value':subcat} for subcat in subCats]
 		
-		dropDowns = [dcc.Dropdown(id='specificC-dropdown',
+        dropDowns = [dcc.Dropdown(id='specificC-dropdown',
 								options=options,
 								value=None,
 								placeholder="Select Device Capabilities"
 								)]
-		return dropDowns
-	else:
-		return  [dcc.Dropdown(id='specificC-dropdown',
+        return dropDowns
+    else:
+        return  [dcc.Dropdown(id='specificC-dropdown',
 						options=[{'label':'Select Specific Capabilities',
 										'value':'NoCG'}],
 						value=None,
@@ -291,7 +291,60 @@ def set_tpl_assessment_second_level_selection_3(sdata,ndata,value):
 						value=None,
 						placeholder="Select Device Capabilities"
 						)]
+# Begin new callback for plot-3
+    
+@app.callback(Output('q3-holdernew','children'),
+                [Input('narrowC-dropdown','value')],
+                [State('subCats-store','data')])
+def set_tpl_assessment_plot_subcat(ndata,value):
+    while value:
+        print(value)
+        print(ndata)
+        
 
+        df=calc_input_scores()
+        
+        df2=calc_third_level_group_score()
+        df3=calc_second_level_group_score()
+        
+        #print(df3.loc[options,'RW'])
+        cats=[]
+#        for j in capabilities:
+#            #print(j)
+        userTemplate = load_user_template()
+        subcats=df.loc[value].loc[ndata].index.get_level_values(0).unique().values
+        print(subcats)
+        #subCats = userTemplate.loc[value,ndata].index.get_level_values(0).unique().values
+#            cats=np.append([cats],[subCats])
+        #print(userTemplate['Narrow Capability'])    
+       # trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+        #trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+        #print(df3['Net'])
+   
+        return html.Div([
+                        
+                        #dcc.Graph(id='test-graph'),
+                        html.Div(dcc.Graph(
+                                id='testgraph-3',
+                                #figure={ 'data' : [trace1,trace2],
+                                       figure={'data': [{'x': subcats,'y': df.loc[value].loc[ndata]['Score'],'type' : 'bar',
+                                                 'hoverinfo':'labels + df2["Score"]',},],
+                                        'layout': {
+                                                'title': 'TPL Narow Capability',
+                                                'showlegend': False},
+                                        }
+        
+                                    )
+                               # id='left-div-new'
+                                )
+                        
+                                ],
+                               # id='q1-holdernew',
+                        className='eleven columns'
+                        ),             
+                        
+
+#end plot callback
 @app.callback(Output('narrowC-store','data'),
                 [Input('narrowC-dropdown','value')])
 def set_subCats_store(value):
@@ -452,7 +505,7 @@ def disp_question(qn,qdata,sdata,ndata,value):
 				]
 
 
-@app.callback(Output('dummy-out-1','children'),
+@app.callback(Output('dummy-out-1','children'),               
                 [Input('score-sub-button','n_clicks')],
 				[State('question-score','value'),
 				State('question-weight','value'),
@@ -474,10 +527,13 @@ def sub_new_scores(click,score,weight,qn,qdata,sdata,ndata,value):
             ut.loc[value,ndata,sdata]['Score'] = score
             ut.loc[value,ndata,sdata]['Weight'] = weight
             ut.loc[value,ndata,sdata]['Input Score'] = score*weight
-        set_tpl_assessment_plot_subcat(value)
+        
         save_user_template(ut)
 
-@app.callback(Output('net-score-div','children'),
+        
+
+@app.callback([Output('net-score-div','children'),
+               Output('test-graph','children')],               
                 [Input('score-sub-button','n_clicks')],
 				[State('question-score','value'),
 				State('question-weight','value'),
@@ -487,20 +543,22 @@ def sub_new_scores(click,score,weight,qn,qdata,sdata,ndata,value):
                 State('narrowC-store','data'),
                 State('subCats-store','data')])
 def set_input_score(click,score,weight,qn,qdata,sdata,ndata,value):
-	if click:
-		net = score*weight
-		return html.H6(f'Question Score:  {net}')
-	else:
-		ut = load_user_template()
+    if click:
+        net = score*weight
+        figure=set_tpl_assessment_plot_subcat(value)
+        return html.H6(f'Question Score:  {net}'),figure
+    else:
+        ut = load_user_template()
 
-		try:
-			net = ut.loc[value,ndata,sdata].iloc[qn]['Input Score']
+        try:
+            net = ut.loc[value,ndata,sdata].iloc[qn]['Input Score']
        
 
-		except (AttributeError,ValueError) as e:
-			net = ut.loc[value,ndata,sdata]['Input Score']
+        except (AttributeError,ValueError) as e:
+            net = ut.loc[value,ndata,sdata]['Input Score']
+        figure=set_tpl_assessment_plot_subcat(value)
 			
-		return html.H6(f'Question Score:  {net}')
+        return html.H6(f'Question Score:  {net}'),figure
 
 @app.callback(Output('dummy-out-2','children'),
                 [Input('contribution-weight','value')],
