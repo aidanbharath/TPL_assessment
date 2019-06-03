@@ -3,6 +3,7 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output, State
 import plotly.graph_objs as go
+import numpy as np
 
 from pyfladesk import init_gui
 
@@ -11,6 +12,9 @@ from load import (base_load_template,
 					create_user_template,
 					load_user_template,
 					save_user_template)
+from calculate import (calc_input_scores,
+						calc_second_level_group_score,
+						calc_third_level_group_score)
 
 import pandas as pd
 
@@ -53,11 +57,12 @@ the basefile are automatically accounted for in the app.
                 [Input('standard-load-button','n_clicks')],
                 [State('tpl-assessment-store','data')])
 def load_base_tpl_assessment_package(click, data):
-
-	if click and not data:
-		baseTemplate = base_load_template()
-		create_user_template(baseTemplate)
-		return baseTemplate.index.get_level_values(0).unique().values
+    if click and not data:
+        baseTemplate = base_load_template()
+        create_user_template(baseTemplate)
+        
+    
+        return baseTemplate.index.get_level_values(0).unique().values
 
 
 # Begin new callback for plot
@@ -67,20 +72,35 @@ def load_base_tpl_assessment_package(click, data):
 def set_tpl_assessment_plot(capabilities):
     if capabilities:
        
-        print(capabilities)
+        
         plot_options=[{'label':capabilities,'value':[10,10,10,10,10,10,10],'type':'pie',}]
-        print(plot_options)
+        #print(plot_options)
+        df=calc_input_scores()
+        
+        df2=calc_third_level_group_score()
+        df3=calc_second_level_group_score()
+        #print(df2)
+        cats=[]
+        for j in capabilities:
+            #print(j)
+            baseTemplate = base_load_template()
+            subCats = baseTemplate.loc[j].index.get_level_values(0).unique().values
+            cats=np.append([cats],[subCats])
+            
+        trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+        trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+        #print(df3['Net'])
         
         return html.Div([
                         
                         #dcc.Graph(id='test-graph'),
                         html.Div(dcc.Graph(
                                 id='test-graph',
-                                figure={
-                                       'data': [{'labels': capabilities,'values': [10,10,10,10,10,10,10],'type' : 'pie',
-                                                 'hoverinfo':'labels',},],
+                                #figure={ 'data' : [trace1,trace2],
+                                       figure={'data': [{'x': capabilities,'y': df2[capabilities],'type' : 'bar',
+                                                 'hoverinfo':'labels + df2["Scores"]',},],
                                         'layout': {
-                                                'title': 'Dash Data Visualization-2',
+                                                'title': 'TPL Capabilities Score',
                                                 'showlegend': False},
                                         }
         
@@ -121,6 +141,57 @@ def set_tpl_assessment_topLevel_dropDown(options,Div):
     else:
         return Div
 
+# Begin new callback for plot-2
+    
+@app.callback(Output('q2-holdernew','children'),
+                [Input('capabilities-dropdown','value')])
+def set_tpl_assessment_plot_subcat(options):
+    while options:
+       
+        
+       # plot_options=[{'label':capabilities,'value':[10,10,10,10,10,10,10],'type':'pie',}]
+        #print(options)
+        df=calc_input_scores()
+        
+        df2=calc_third_level_group_score()
+        df3=calc_second_level_group_score()
+        
+        #print(df3.loc[options,'RW'])
+        cats=[]
+#        for j in capabilities:
+#            #print(j)
+        baseTemplate = base_load_template()
+        subCats = baseTemplate.loc[options].index.get_level_values(0).unique().values
+#            cats=np.append([cats],[subCats])
+        #print(df3.loc[options,'Score'])    
+       # trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+        #trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+        #print(df3['Net'])
+   
+        return html.Div([
+                        
+                        #dcc.Graph(id='test-graph'),
+                        html.Div(dcc.Graph(
+                                id='test-graph2',
+                                #figure={ 'data' : [trace1,trace2],
+                                       figure={'data': [{'x': subCats,'y': df3.loc[options,'Score'],'type' : 'bar',
+                                                 'hoverinfo':'labels + df2["Score"]',},],
+                                        'layout': {
+                                                'title': 'TPL Sub_Catagory Score',
+                                                'showlegend': False},
+                                        }
+        
+                                    )
+                               # id='left-div-new'
+                                )
+                        
+                                ],
+                               # id='q1-holdernew',
+                        className='eleven columns'
+                        ),             
+                        
+
+#end plot callback
 
 @app.callback(Output('subCats-store','data'),
                 [Input('capabilities-dropdown','value')])
@@ -146,20 +217,21 @@ def break_left_hidden(value):
                 [Input('subCats-store','data')])
 def set_tpl_assessment_second_level_selection_1(value):
 
-	if value:
-		baseTemplate = base_load_template()
-		subCats = baseTemplate.loc[value].index.get_level_values(0).unique().values
-
-		options = [{'label':subcat,'value':subcat} for subcat in subCats]
+    if value:
+        
+        baseTemplate = base_load_template()
+        subCats = baseTemplate.loc[value].index.get_level_values(0).unique().values
+        options = [{'label':subcat,'value':subcat} for subcat in subCats]
+       
 		
-		dropDowns = [dcc.Dropdown(id='narrowC-dropdown',
+        dropDowns = [dcc.Dropdown(id='narrowC-dropdown',
 								options=options,
 								value=None,
 								placeholder="Select Device Capabilities"
 								)]
-		return dropDowns
-	else:
-		return  [dcc.Dropdown(id='narrowC-dropdown',
+        return dropDowns
+    else:
+        return  [dcc.Dropdown(id='narrowC-dropdown',
 						options=[{'label':'Select Device Capabilities',
 										'value':'NoCG'}],
 						value=None,
@@ -171,20 +243,20 @@ def set_tpl_assessment_second_level_selection_1(value):
                 [State('subCats-store','data')])
 def set_tpl_assessment_second_level_selection_2(ndata,value):
 
-	if ndata:
+    if ndata:
 
-		baseTemplate = base_load_template()
-		subCats = baseTemplate.loc[value].loc[ndata].index.get_level_values(0).unique().values
-		options = [{'label':subcat,'value':subcat} for subcat in subCats]
+        baseTemplate = base_load_template()
+        subCats = baseTemplate.loc[value].loc[ndata].index.get_level_values(0).unique().values
+        options = [{'label':subcat,'value':subcat} for subcat in subCats]
 		
-		dropDowns = [dcc.Dropdown(id='specificC-dropdown',
+        dropDowns = [dcc.Dropdown(id='specificC-dropdown',
 								options=options,
 								value=None,
 								placeholder="Select Device Capabilities"
 								)]
-		return dropDowns
-	else:
-		return  [dcc.Dropdown(id='specificC-dropdown',
+        return dropDowns
+    else:
+        return  [dcc.Dropdown(id='specificC-dropdown',
 						options=[{'label':'Select Specific Capabilities',
 										'value':'NoCG'}],
 						value=None,
@@ -219,7 +291,60 @@ def set_tpl_assessment_second_level_selection_3(sdata,ndata,value):
 						value=None,
 						placeholder="Select Device Capabilities"
 						)]
+# Begin new callback for plot-3
+    
+@app.callback(Output('q3-holdernew','children'),
+                [Input('narrowC-dropdown','value')],
+                [State('subCats-store','data')])
+def set_tpl_assessment_plot_subcat(ndata,value):
+    while value:
+        print(value)
+        print(ndata)
+        
 
+        df=calc_input_scores()
+        
+        df2=calc_third_level_group_score()
+        df3=calc_second_level_group_score()
+        
+        #print(df3.loc[options,'RW'])
+        cats=[]
+#        for j in capabilities:
+#            #print(j)
+        userTemplate = load_user_template()
+        subcats=df.loc[value].loc[ndata].index.get_level_values(0).unique().values
+        print(subcats)
+        #subCats = userTemplate.loc[value,ndata].index.get_level_values(0).unique().values
+#            cats=np.append([cats],[subCats])
+        #print(userTemplate['Narrow Capability'])    
+       # trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+        #trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+        #print(df3['Net'])
+   
+        return html.Div([
+                        
+                        #dcc.Graph(id='test-graph'),
+                        html.Div(dcc.Graph(
+                                id='testgraph-3',
+                                #figure={ 'data' : [trace1,trace2],
+                                       figure={'data': [{'x': subcats,'y': df.loc[value].loc[ndata]['Score'],'type' : 'bar',
+                                                 'hoverinfo':'labels + df2["Score"]',},],
+                                        'layout': {
+                                                'title': 'TPL Narow Capability',
+                                                'showlegend': False},
+                                        }
+        
+                                    )
+                               # id='left-div-new'
+                                )
+                        
+                                ],
+                               # id='q1-holdernew',
+                        className='eleven columns'
+                        ),             
+                        
+
+#end plot callback
 @app.callback(Output('narrowC-store','data'),
                 [Input('narrowC-dropdown','value')])
 def set_subCats_store(value):
@@ -319,6 +444,18 @@ def disp_question(qn,qdata,sdata,ndata,value):
 		net = ut_Values['Score']*ut_Values['Weight']
 		return	[html.H6(f'Question {qn+1}'),
 				html.Div(id='net-score-div'),
+				html.Div([
+					html.Div([f'Contribution to {sdata} Score:'],
+							className='eight columns'),
+					dcc.Input(placeholder='Enter your Score',
+								id='contribution-weight',
+								type='number',
+								value=ut_Values['SpecCap Weight'],
+								min=0,max=10,
+								debounce = True,
+								className='four columns')
+				],
+				className='twelve columns'),
 				html.Div(question),
 				html.Div([
 					html.Div([
@@ -368,7 +505,7 @@ def disp_question(qn,qdata,sdata,ndata,value):
 				]
 
 
-@app.callback(Output('dummy-out-1','children'),
+@app.callback(Output('dummy-out-1','children'),               
                 [Input('score-sub-button','n_clicks')],
 				[State('question-score','value'),
 				State('question-weight','value'),
@@ -378,20 +515,25 @@ def disp_question(qn,qdata,sdata,ndata,value):
                 State('narrowC-store','data'),
                 State('subCats-store','data')])
 def sub_new_scores(click,score,weight,qn,qdata,sdata,ndata,value):
-	if click:
-		ut = load_user_template()
+    if click:
+        ut = load_user_template()
 
-		try:
-			ut.loc[value,ndata,sdata].iloc[qn]['Score'] = score
-			ut.loc[value,ndata,sdata].iloc[qn]['Weight'] = weight
+        try:
+            ut.loc[value,ndata,sdata].iloc[qn]['Score'] = score
+            ut.loc[value,ndata,sdata].iloc[qn]['Weight'] = weight
+            ut.loc[value,ndata,sdata].iloc[qn]['Input Score'] = score*weight
 
-		except (AttributeError,ValueError) as e:
-			ut.loc[value,ndata,sdata]['Score'] = score
-			ut.loc[value,ndata,sdata]['Weight'] = weight
+        except (AttributeError,ValueError) as e:
+            ut.loc[value,ndata,sdata]['Score'] = score
+            ut.loc[value,ndata,sdata]['Weight'] = weight
+            ut.loc[value,ndata,sdata]['Input Score'] = score*weight
+        
+        save_user_template(ut)
 
-		save_user_template(ut)
+        
 
-@app.callback(Output('net-score-div','children'),
+@app.callback([Output('net-score-div','children'),
+               Output('test-graph','children')],               
                 [Input('score-sub-button','n_clicks')],
 				[State('question-score','value'),
 				State('question-weight','value'),
@@ -400,26 +542,46 @@ def sub_new_scores(click,score,weight,qn,qdata,sdata,ndata,value):
 				State('specificC-store','data'),
                 State('narrowC-store','data'),
                 State('subCats-store','data')])
-def set_net_score(click,score,weight,qn,qdata,sdata,ndata,value):
-	if click:
-		return html.H6(f'Net Score:  {score*weight}')
-	else:
-		ut = load_user_template()
+def set_input_score(click,score,weight,qn,qdata,sdata,ndata,value):
+    if click:
+        net = score*weight
+        figure=set_tpl_assessment_plot_subcat(value)
+        return html.H6(f'Question Score:  {net}'),figure
+    else:
+        ut = load_user_template()
 
-		try:
-			score = ut.loc[value,ndata,sdata].iloc[qn]['Score']
-			weight = ut.loc[value,ndata,sdata].iloc[qn]['Weight']
+        try:
+            net = ut.loc[value,ndata,sdata].iloc[qn]['Input Score']
+       
 
-		except (AttributeError,ValueError) as e:
-			score = ut.loc[value,ndata,sdata]['Score']
-			weight = ut.loc[value,ndata,sdata]['Weight']
+        except (AttributeError,ValueError) as e:
+            net = ut.loc[value,ndata,sdata]['Input Score']
+        figure=set_tpl_assessment_plot_subcat(value)
+			
+        return html.H6(f'Question Score:  {net}'),figure
 
-		return html.H6(f'Net Score:  {score*weight}')
+@app.callback(Output('dummy-out-2','children'),
+                [Input('contribution-weight','value')],
+				[State('numQuestions-dropdown','value'),
+				State('qGroup-store','data'),
+				State('specificC-store','data'),
+                State('narrowC-store','data'),
+                State('subCats-store','data')])
+def sub_new_scores(spWeight,qn,qdata,sdata,ndata,value):
+    if value:
+        ut = load_user_template()
+
+        try:
+            ut.loc[value,ndata,sdata].iloc[qn]['SpecCap Weight'] = spWeight
+
+        except (AttributeError,ValueError) as e:
+            ut.loc[value,ndata,sdata]['SpecCap Weight'] = spWeight
+        
+        save_user_template(ut)
+        
 
 
-
-
-
+        
 
 
 if __name__ == '__main__':

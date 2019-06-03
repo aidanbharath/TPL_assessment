@@ -38,7 +38,8 @@ def header():
                         dcc.Store(id='qGroup-store',storage_type='local'),
                         dcc.Store(id='qChoiceGroup-store',storage_type='local'),
                         dcc.Store(id='qChoice-store',storage_type='local'),
-						html.Div(id='dummy-out-1', style={'display':'none'})
+						html.Div(id='dummy-out-1', style={'display':'none'}),
+						html.Div(id='dummy-out-2', style={'display':'none'})
                         ]
         )
         return div
@@ -192,38 +193,15 @@ def right_div_preamble():
     
         return [html.Div(#[
 #                        html.H5('Plot:'),
-#                       # dcc.Graph(id='test-graph'),
-#                        html.Div(dcc.Graph(
-#                                id='test-graph',
-#                                figure={
-#                                       'data': [{'values': [20,20,20,20],'type' : 'pie'}],
-#                                        'layout': {
-#                                                'title': 'Dash Data Visualization'
-#                                                    },
-#                                                'legend': {'x': 0, 'y': 1, 'z': 2}
-#                                        }
-#        
-#                                    )
-#                               # id='left-div-new'
-#                                )
+                        html.Div(id='test-graph'),
 #                        
-#                                ],
                                 id='q1-holdernew',
                         className='eleven columns'
-                        ),             
+                        ),
+                    html.Div(id='q2-holdernew',className='eleven columns'),
+                    html.Div(id='q3-holdernew',className='eleven columns'),
                         
-#                                                #layout=go.Layout(
-#                                                       # title='US Export of Plastic Scrap',
-#                                                      #  showlegend=True,
-#                                                      #  legend=go.layout.Legend(
-#                                                       #         x=0,
-#                                                        #        y=1.0
-#                                                        #        ),
-#                                                        #margin=go.layout.Margin(l=40, r=0, t=40, b=30)
-#                                                      #  )
-                                             #  )
-                                   # style={'height': 300},
-                                   # id='my-graph'
+#                                               
  
                                     
                                     ]                                                                
@@ -231,6 +209,13 @@ def right_div_preamble():
 
 def bot_right_div_1_preamble():
         return [html.Div(id='net-score-div'),
+						dcc.Input(placeholder='Enter your Score',
+								id='contribution-weight',
+								type='number',
+								value=0,
+								min=0,max=10,
+								debounce = True,
+								className='four columns'),
 				html.Div([
 					html.Div([
 						dcc.ConfirmDialogProvider(
