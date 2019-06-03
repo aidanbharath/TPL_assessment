@@ -8,6 +8,23 @@ def base_load_template(File = 'static/base_TPL_assessment.xlsx'):
     #print(tplAssessment.loc)
     return tplAssessment
 
+def temp_load_assessment(File = 'static/base_TPL_assessment.xlsx'):
+    return read_excel(File)
+
+    
+def cache_create_template(File = 'static/base_TPL_assessment.xlsx'):
+    base = read_excel(File)
+    userDF = base.loc[:,('Broad Capability','Narrow Capability','Specific Capability')]
+    userDF['Score'] = float64(base['Score'])
+    userDF['Weight'] = float64(base['Weight'])
+    userDF['SpecCap Weight'] = float64(base['SpecCap Weight'])
+    userDF['RW'] = nan
+    userDF['Input Score'] = userDF['Score']*userDF['Weight']
+    userDF['Contribution'] = userDF['Input Score']*userDF['RW']
+    userDF['Net'] = nan
+    userDF['Threshold'] = float64(base['Threshold'])
+    return userDF
+
 def create_user_template(baseTemplate):
     userDF = DataFrame(index = baseTemplate.index,
                             columns = ['Score','Weight','SpecCap Weight','Threshold'],

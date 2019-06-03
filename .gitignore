@@ -7,3 +7,5 @@ test.egg-info/*
 **/build
 **./dist/
 *.csv
+**/cache/
+**/static/
