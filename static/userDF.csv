@@ -1,88 +1,88 @@
-Broad Capability,Narrow Capability,Specific Capability,Score,Weight
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,9.0,0.3
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Design,1.0,1.0
-Cost of Energy,CAPEX,Manufactuability,1.0,1.0
-Cost of Energy,CAPEX,Manufactuability,1.0,1.0
-Cost of Energy,CAPEX,Manufactuability,1.0,1.0
-Cost of Energy,CAPEX,Manufactuability,1.0,1.0
-Cost of Energy,CAPEX,Transportability,1.0,1.0
-Cost of Energy,CAPEX,Installability,1.0,1.0
-Cost of Energy,CAPEX,Installability,1.0,1.0
-Cost of Energy,CAPEX,Installability,1.0,1.0
-Cost of Energy,CAPEX,Installability,1.0,1.0
-Cost of Energy,CAPEX,Installability,1.0,1.0
-Cost of Energy,OPEX,Reliability,1.0,1.0
-Cost of Energy,OPEX,Reliability,1.0,1.0
-Cost of Energy,OPEX,Maintainability,1.0,1.0
-Cost of Energy,OPEX,Maintainability,1.0,1.0
-Cost of Energy,Performance,Energy Capture,1.0,1.0
-Cost of Energy,Performance,Energy Capture,1.0,1.0
-Cost of Energy,Performance,Energy Capture,1.0,1.0
-Cost of Energy,Performance,Energy Capture,1.0,1.0
-Cost of Energy,Performance,Energy Capture,1.0,1.0
-Cost of Energy,Performance,Energy Capture,1.0,1.0
-Cost of Energy,Performance,Energy Conversion,1.0,1.0
-Cost of Energy,Performance,Energy Conversion,1.0,1.0
-Cost of Energy,Performance,Energy Conversion,1.0,1.0
-Cost of Energy,Performance,Energy Conversion,1.0,1.0
-Cost of Energy,Availability,Availability,1.0,1.0
-Cost of Energy,Availability,Availability,1.0,1.0
-Cost of Energy,Availability,Availability,1.0,1.0
-Investment Opportunity,Investment Opportunity,CAPEX Uncertainty,1.0,1.0
-Investment Opportunity,Investment Opportunity,CAPEX Uncertainty,1.0,1.0
-Investment Opportunity,Investment Opportunity,CAPEX Uncertainty,1.0,1.0
-Investment Opportunity,Investment Opportunity,OPEX Uncertainty,1.0,1.0
-Investment Opportunity,Investment Opportunity,OPEX Uncertainty,1.0,1.0
-Investment Opportunity,Investment Opportunity,OPEX Uncertainty,1.0,1.0
-Investment Opportunity,Investment Opportunity,Performance Uncertainty,1.0,1.0
-Investment Opportunity,Investment Opportunity,Availability Uncertainty,1.0,1.0
-Investment Opportunity,Investment Opportunity,Availability Uncertainty,1.0,1.0
-Investment Opportunity,Investment Opportunity,Availability Uncertainty,1.0,1.0
-Grid Operation,Forecastable,Forecastable,1.0,1.0
-Society Benefits,Impact on Local Communities,Impact on Local Communities,1.0,1.0
-Society Benefits,Impact on Local Communities,Impact on Local Communities,1.0,1.0
-Society Benefits,Impact on Local Communities,Impact on Local Communities,1.0,1.0
-Society Benefits,Greenhouse gas (GHG) emissions and polution,Greenhouse gas (GHG) emissions and polution,1.0,1.0
-Society Benefits,Greenhouse gas (GHG) emissions and polution,Greenhouse gas (GHG) emissions and polution,1.0,1.0
-Society Benefits,Greenhouse gas (GHG) emissions and polution,Greenhouse gas (GHG) emissions and polution,1.0,1.0
-Permitting and Certification,Environmental Impacts,Environmental Impacts,1.0,1.0
-Permitting and Certification,Ecological Impacts,Ecological Impacts,1.0,1.0
-Permitting and Certification,Area Use Conflicts,Area Use Conflicts,1.0,1.0
-Permitting and Certification,Area Use Conflicts,Area Use Conflicts,1.0,1.0
-Safety and Function,Safety,Safety,1.0,1.0
-Safety and Function,Safety,Safety,1.0,1.0
-Safety and Function,Safety,Safety,1.0,1.0
-Safety and Function,Safety,Safety,1.0,1.0
-Safety and Function,Safety,Safety,1.0,1.0
-Safety and Function,Safety,Safety,1.0,1.0
-Safety and Function,Be Survivable,Be able to survive extreme loads/responses (can be caused by extreme weather conditions or high power operational conditions),1.0,1.0
-Safety and Function,Be Survivable,Be able to survive extreme loads/responses (can be caused by extreme weather conditions or high power operational conditions),1.0,1.0
-Safety and Function,Be Survivable,"Be able to cope with grid failures, grid loss or grid interruption (black start capability);  coupling grid loss with a communication loss ",1.0,1.0
-Safety and Function,Be Survivable,"Be able to cope with grid failures, grid loss or grid interruption (black start capability);  coupling grid loss with a communication loss ",1.0,1.0
-Safety and Function,Be Survivable,"Be able to cope with grid failures, grid loss or grid interruption (black start capability);  coupling grid loss with a communication loss ",1.0,1.0
-Safety and Function,Be Survivable,"Be able to avoid and survive to collisions (ships, other marine users, mammals)",1.0,1.0
-Safety and Function,Be Survivable,"Be able to avoid and survive to collisions (ships, other marine users, mammals)",1.0,1.0
-Safety and Function,Be Survivable,"Be survivable in temporary conditions including installation (& tow-out, if applicable) and maintenance",1.0,1.0
-Safety and Function,Be Survivable,Have robust fatigue characteristics,1.0,1.0
-Safety and Function,Be Survivable,Have robust fatigue characteristics,1.0,1.0
-Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0
-Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0
-Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0
-Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0
-Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0
-Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0
-Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0
-Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0
+Broad Capability,Narrow Capability,Specific Capability,Score,Weight,SpecCap Weight,Threshold,RW,Input Score,Contribution,Net
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Design,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Manufactuability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Manufactuability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Manufactuability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Manufactuability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Transportability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Installability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Installability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Installability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Installability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,CAPEX,Installability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,OPEX,Reliability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,OPEX,Reliability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,OPEX,Maintainability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,OPEX,Maintainability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Performance,Energy Capture,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Performance,Energy Capture,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Performance,Energy Capture,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Performance,Energy Capture,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Performance,Energy Capture,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Performance,Energy Capture,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Performance,Energy Conversion,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Performance,Energy Conversion,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Performance,Energy Conversion,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Performance,Energy Conversion,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Availability,Availability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Availability,Availability,1.0,1.0,1.0,10.0,,1.0,,
+Cost of Energy,Availability,Availability,1.0,1.0,1.0,10.0,,1.0,,
+Investment Opportunity,Investment Opportunity,CAPEX Uncertainty,1.0,1.0,1.0,10.0,,1.0,,
+Investment Opportunity,Investment Opportunity,CAPEX Uncertainty,1.0,1.0,5.0,10.0,,1.0,,
+Investment Opportunity,Investment Opportunity,CAPEX Uncertainty,1.0,1.0,1.0,10.0,,1.0,,
+Investment Opportunity,Investment Opportunity,OPEX Uncertainty,1.0,1.0,1.0,10.0,,1.0,,
+Investment Opportunity,Investment Opportunity,OPEX Uncertainty,1.0,1.0,1.0,10.0,,1.0,,
+Investment Opportunity,Investment Opportunity,OPEX Uncertainty,1.0,1.0,1.0,10.0,,1.0,,
+Investment Opportunity,Investment Opportunity,Performance Uncertainty,1.0,1.0,1.0,10.0,,1.0,,
+Investment Opportunity,Investment Opportunity,Availability Uncertainty,1.0,1.0,1.0,10.0,,1.0,,
+Investment Opportunity,Investment Opportunity,Availability Uncertainty,1.0,1.0,1.0,10.0,,1.0,,
+Investment Opportunity,Investment Opportunity,Availability Uncertainty,1.0,1.0,1.0,10.0,,1.0,,
+Grid Operation,Forecastable,Forecastable,1.0,1.0,1.0,10.0,,1.0,,
+Society Benefits,Impact on Local Communities,Impact on Local Communities,1.0,1.0,1.0,10.0,,1.0,,
+Society Benefits,Impact on Local Communities,Impact on Local Communities,1.0,1.0,1.0,10.0,,1.0,,
+Society Benefits,Impact on Local Communities,Impact on Local Communities,1.0,1.0,1.0,10.0,,1.0,,
+Society Benefits,Greenhouse gas (GHG) emissions and polution,Greenhouse gas (GHG) emissions and polution,1.0,1.0,1.0,10.0,,1.0,,
+Society Benefits,Greenhouse gas (GHG) emissions and polution,Greenhouse gas (GHG) emissions and polution,1.0,1.0,1.0,10.0,,1.0,,
+Society Benefits,Greenhouse gas (GHG) emissions and polution,Greenhouse gas (GHG) emissions and polution,1.0,1.0,1.0,10.0,,1.0,,
+Permitting and Certification,Environmental Impacts,Environmental Impacts,1.0,1.0,1.0,10.0,,1.0,,
+Permitting and Certification,Ecological Impacts,Ecological Impacts,1.0,1.0,1.0,10.0,,1.0,,
+Permitting and Certification,Area Use Conflicts,Area Use Conflicts,1.0,1.0,1.0,10.0,,1.0,,
+Permitting and Certification,Area Use Conflicts,Area Use Conflicts,1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Safety,Safety,1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Safety,Safety,1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Safety,Safety,1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Safety,Safety,1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Safety,Safety,1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Safety,Safety,1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Be Survivable,Be able to survive extreme loads/responses (can be caused by extreme weather conditions or high power operational conditions),1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Be Survivable,Be able to survive extreme loads/responses (can be caused by extreme weather conditions or high power operational conditions),1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Be Survivable,"Be able to cope with grid failures, grid loss or grid interruption (black start capability);  coupling grid loss with a communication loss ",1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Be Survivable,"Be able to cope with grid failures, grid loss or grid interruption (black start capability);  coupling grid loss with a communication loss ",1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Be Survivable,"Be able to cope with grid failures, grid loss or grid interruption (black start capability);  coupling grid loss with a communication loss ",1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Be Survivable,"Be able to avoid and survive to collisions (ships, other marine users, mammals)",1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Be Survivable,"Be able to avoid and survive to collisions (ships, other marine users, mammals)",1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Be Survivable,"Be survivable in temporary conditions including installation (& tow-out, if applicable) and maintenance",1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Be Survivable,Have robust fatigue characteristics,1.0,1.0,1.0,10.0,,1.0,,
+Safety and Function,Be Survivable,Have robust fatigue characteristics,1.0,1.0,1.0,10.0,,1.0,,
+Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0,1.0,10.0,,1.0,,
+Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0,1.0,10.0,,1.0,,
+Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0,1.0,10.0,,1.0,,
+Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0,1.0,10.0,,1.0,,
+Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0,1.0,10.0,,1.0,,
+Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0,1.0,10.0,,1.0,,
+Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0,1.0,10.0,,1.0,,
+Be Deployable Globally,Be Deployable Globally,Be Deployable Globally,1.0,1.0,1.0,10.0,,1.0,,

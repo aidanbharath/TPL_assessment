@@ -1,6 +1,8 @@
 import dash
 import dash_html_components as html
 import dash_core_components as dcc
+import plotly.graph_objs as go
+#import dash_bootstrap_components as dbc
 
 import base64
 
@@ -36,7 +38,8 @@ def header():
                         dcc.Store(id='qGroup-store',storage_type='local'),
                         dcc.Store(id='qChoiceGroup-store',storage_type='local'),
                         dcc.Store(id='qChoice-store',storage_type='local'),
-						html.Div(id='dummy-out-1', style={'display':'none'})
+						html.Div(id='dummy-out-1', style={'display':'none'}),
+						html.Div(id='dummy-out-2', style={'display':'none'})
                         ]
         )
         return div
@@ -84,8 +87,10 @@ def bot_Divs_Base():
                                 html.Div(left_div_preamble(),
                                 id='left-div',
                                 hidden=True,
+
                                 className='twelve columns'),
 								html.Div([
+
                                 html.Div([
                                         html.Div(id='bot-left-div-1',
                                         className='twelve columns'),
@@ -93,11 +98,13 @@ def bot_Divs_Base():
                                         className='twelve columns'),
                                         html.Div([
                                                 dcc.Dropdown(id='numQuestions-dropdown',
+
 															options=[{'label':'noQ','value':'noQ'}],
 															value=None,
 															placeholder="Select Question"
 															),
                                         ],id='bot-left-div-3',
+
                                         className='twelve columns')
                                         ],id='bot-left-div',
                                         className='six columns'),
@@ -115,6 +122,28 @@ def bot_Divs_Base():
                                 className='six columns')
                         ]),
 						],
+                        className='twelve columns'
+                )
+        return div
+    
+def bot_Divs_Base2():
+        div = html.Div(id='bot-background-div2',
+                        children=[
+                                html.Div([
+                                        html.Div(id='bot-right-div-6',
+                                        className='twelve columns'),
+                                        html.Div(id='bot-right-div-7',
+                                        className='twelve columns'),
+                                        html.Div(id='bot-right-div-8',
+                                        className='twleve columns'),                                        
+                                        html.Div(right_div_preamble(),
+                                        id='right-div',
+                                        hidden=False,
+                                        className='six columns'
+                                        , style={'marginleft': 5000000000000000, 'marginTop': 25}) 
+                                        ],
+                                        ),                                      
+                                        ],
                         className='twelve columns'
                 )
         return div
@@ -159,8 +188,34 @@ def left_div_preamble():
                         )
         ]
 
+
+def right_div_preamble():
+    
+        return [html.Div(#[
+#                        html.H5('Plot:'),
+                        html.Div(id='test-graph'),
+#                        
+                                id='q1-holdernew',
+                        className='eleven columns'
+                        ),
+                    html.Div(id='q2-holdernew',className='eleven columns'),
+                    html.Div(id='q3-holdernew',className='eleven columns'),
+                        
+#                                               
+ 
+                                    
+                                    ]                                                                
+                            
+
 def bot_right_div_1_preamble():
         return [html.Div(id='net-score-div'),
+						dcc.Input(placeholder='Enter your Score',
+								id='contribution-weight',
+								type='number',
+								value=0,
+								min=0,max=10,
+								debounce = True,
+								className='four columns'),
 				html.Div([
 					html.Div([
 						dcc.ConfirmDialogProvider(
@@ -199,6 +254,7 @@ def bot_right_div_1_preamble():
 				],className='twelve columns')
 				
 				]
+
 
 
 

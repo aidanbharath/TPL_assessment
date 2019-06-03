@@ -2,3 +2,4 @@
 *.xlsx
 *.pyc
 test.egg-info/*
+*.csv
