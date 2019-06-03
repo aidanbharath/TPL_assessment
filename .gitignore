@@ -6,4 +6,4 @@ test.egg-info/*
 *.spec
 **/build
 **./dist/
-
+*.csv
