@@ -15,7 +15,7 @@ from pyfladesk import init_gui
 from LayoutBase import colors, header, top_Divs_Base, bot_Divs_Base,bot_Divs_Base2
 from load import (base_load_template,
 					cache_create_template,
-					temp_load_assessment,
+					standard_load_assessment,
 					create_user_template,
 					load_user_template,
 					save_user_template)
@@ -47,18 +47,18 @@ cache = Cache(server, config={
 
 
 # ok so .to_json() requires a unique index for each columns so .set_index() breaks it
-def init_user_dataframe(session_id):
+def init_cache_dataframe(session_id):
 	@cache.memoize()
 	def create_and_serialize_data(session_id):
-		df = cache_create_template()
+		df = standard_load_assessment()
 		return df.to_json()
 	return pd.read_json(create_and_serialize_data(session_id))
 
 # with the session file created, we need to use the same logic to first write then read
 
 def update_user_cache(session_id):
-	#ud = pd.read_json(f'./cache/{session_id}')
-	#print(ud)
+	ud = pd.read_json(f'./cache/{session_id}')
+	print(ud)
 	@cache.memoize()
 	def load_data(session_id):
 		return df.to_json()
@@ -105,10 +105,8 @@ the basefile are automatically accounted for in the app.
 def load_base_tpl_assessment_package(click,sid,data):
 	
 	if click and not data:
-		df = init_user_dataframe(sid)
-		print(type(df))
-		df.set('Score') = 10
-		print(df.get('Score'))
+		df = init_cache_dataframe(sid)
+		create_user_template(df,sid)
 		return True
 
 
@@ -118,7 +116,7 @@ def load_base_tpl_assessment_package(click,sid,data):
 				State('capabilities-dropdown-div','children')])
 def set_tpl_assessment_options(data,sid,Div):
 	if data and sid:
-		df = init_user_dataframe(sid)
+		df = init_cache_dataframe(sid)
 		options =  [{'label':names,'value':names} for names in df[idxCols[0]].unique()]
 		return dcc.Dropdown(
                     id='capabilities-dropdown',
@@ -136,7 +134,6 @@ def set_tpl_assessment_options(data,sid,Div):
 def set_tpl_assessment_plot(capabilities):
     if capabilities:
        
-        
         plot_options=[{'label':capabilities,'value':[10,10,10,10,10,10,10],'type':'pie',}]
         #print(plot_options)
         df=calc_input_scores()
@@ -232,13 +229,6 @@ def set_tpl_assessment_plot_subcat(options):
                         
 
 #end plot callback
-'''
-@app.callback(Output('subCats-store','data'),
-                [Input('capabilities-dropdown','value')])
-def set_subCats_store(options):
-    if options:
-        return options
-'''
 
 ################################
 '''
@@ -259,7 +249,7 @@ def break_left_hidden(value):
 def set_tpl_assessment_second_level_selection_1(value,sid):
 
 	if value:        
-		df = init_user_dataframe(sid)
+		df = init_cache_dataframe(sid)
 		subCats = df[df[idxCols[0]]==value][idxCols[1]].unique()
 		options = [{'label':subcat,'value':subcat} for subcat in subCats]
 
@@ -284,7 +274,7 @@ def set_tpl_assessment_second_level_selection_1(value,sid):
 def set_tpl_assessment_second_level_selection_2(ndata,value,sid):
 
 	if ndata:
-		df = init_user_dataframe(sid)
+		df = init_cache_dataframe(sid)
 		subCats = df[(df[idxCols[0]]==value)&(df[idxCols[1]]==ndata)][idxCols[2]].unique()
 		options = [{'label':subcat,'value':subcat} for subcat in subCats]
 
@@ -310,9 +300,7 @@ def set_tpl_assessment_second_level_selection_2(ndata,value,sid):
 def set_tpl_assessment_second_level_selection_3(sdata,ndata,value,sid):
 
 	if sdata:
-		df = init_user_dataframe(sid)
-		df = df[(df[idxCols[0]]==value)&(df[idxCols[1]]==ndata)]
-		tpl = temp_load_assessment()
+		tpl = init_cache_dataframe(sid)
 		subCats = tpl[(tpl[idxCols[0]]==value)&(tpl[idxCols[1]]==ndata)&(tpl[idxCols[2]]==sdata)]
 		subCats = subCats['Question Group Description'].unique()
 		options = [{'label':subcat,'value':subcat} for subcat in subCats]
@@ -390,11 +378,12 @@ def set_tpl_assessment_plot_subcat(ndata,value):
 @app.callback(Output('bot-left-div-2','children'),
                 [Input('specificC-dropdown','value')],
                 [State('narrowC-dropdown','value'),
-                State('capabilities-dropdown','value')])
-def set_specific_definition(sdata,ndata,value):
+                State('capabilities-dropdown','value'),
+				State('session-id','children')])
+def set_specific_definition(sdata,ndata,value,sid):
 
 	if sdata:
-		tpl = temp_load_assessment()
+		tpl = init_cache_dataframe(sid)
 		description = tpl[(tpl[idxCols[0]]==value)&(tpl[idxCols[1]]==ndata)&(tpl[idxCols[2]]==sdata)]
 
 		return [html.H6(f'{sdata} Definition:'),
@@ -410,7 +399,7 @@ def set_specific_definition(sdata,ndata,value):
 def set_question_dropdown(qdata,sdata,ndata,value,sid):
 
 	if qdata:
-		tpl = temp_load_assessment()
+		tpl = init_cache_dataframe(sid)
 		length = tpl[(tpl[idxCols[0]]==value)&(tpl[idxCols[1]]==ndata)&(tpl[idxCols[2]]==sdata)]
 		length = length[length['Question Group Description']==qdata]
 		length = length.shape[0]
@@ -435,24 +424,21 @@ def disp_question(qn,qdata,sdata,ndata,value,sid):
 	style={'textAlign': 'center',
 			'color': colors['text']
 		}
-	print(qn)
-	if qn is not None:
-		df = init_user_dataframe(sid)
-		df = df[(df[idxCols[0]]==value)&(df[idxCols[1]]==ndata)&(df[idxCols[2]]==sdata)].iloc[qn]
-		df['Score'] = 10
-		df = init_user_dataframe(sid)
-		df = df[(df[idxCols[0]]==value)&(df[idxCols[1]]==ndata)&(df[idxCols[2]]==sdata)].iloc[qn]
-		print(df['Score'])
 
-		tpl = temp_load_assessment()
+	if qn is not None:
+
+		df = load_user_template(sid)
+		df = df[(df[idxCols[0]]==value)&(df[idxCols[1]]==ndata)&(df[idxCols[2]]==sdata)].iloc[qn]
+		tpl = init_cache_dataframe(sid)
 		qGroup = tpl[(tpl[idxCols[0]]==value)&(tpl[idxCols[1]]==ndata)&(tpl[idxCols[2]]==sdata)]
 		qGroup = qGroup.iloc[qn]
 		question = qGroup['Question']
 		background = qGroup['Background']
 		h,m,l = qGroup['High'],qGroup['Medium'],qGroup['Low']
+		net = df['Score']*df['Weight']
 	
 		return	[html.H6(f'Question {qn+1}'),
-				html.Div(id='net-score-div'),
+				html.Div(children=[html.H6(f'Input Score:  {net}')],id='net-score-div'),
 				html.Div([
 					html.Div([f'Contribution to {sdata} Score:'],
 							className='eight columns'),
@@ -526,70 +512,49 @@ def disp_question(qn,qdata,sdata,ndata,value,sid):
 				State('session-id','children')])
 def sub_new_scores(click,score,weight,qn,qdata,sdata,ndata,value,sid):
 	if click:
-		ud = 1
+		df = load_user_template(sid)
+		qIdx = df[(df[idxCols[0]]==value)&(df[idxCols[1]]==ndata)&(df[idxCols[2]]==sdata)].iloc[qn]['Unnamed: 0']
+
+		df.loc[qIdx,'Score'] = score
+		df.loc[qIdx,'Weight'] = weight
+		df.loc[qIdx,'Input Score'] = score*weight
 		
-		ut = init_user_dataframe()
-
-		try:
-			ut.loc[value,ndata,sdata].iloc[qn]['Score'] = score
-			ut.loc[value,ndata,sdata].iloc[qn]['Weight'] = weight
-			ut.loc[value,ndata,sdata].iloc[qn]['Input Score'] = score*weight
-
-		except (AttributeError,ValueError) as e:
-			ut.loc[value,ndata,sdata]['Score'] = score
-			ut.loc[value,ndata,sdata]['Weight'] = weight
-			ut.loc[value,ndata,sdata]['Input Score'] = score*weight
-
-		save_user_template(ut)
+		save_user_template(df,sid)
 
         
 
-@app.callback([Output('net-score-div','children'),
-               Output('test-graph','children')],               
+@app.callback([Output('net-score-div','children')],               
                 [Input('score-sub-button','n_clicks')],
 				[State('question-score','value'),
 				State('question-weight','value'),
 				State('numQuestions-dropdown','value'),
-				State('qGroup-store','data'),
-				State('specificC-store','data'),
-                State('narrowC-store','data'),
-                State('subCats-store','data')])
+				State('qGroup-dropdown','value'),
+				State('specificC-dropdown','value'),
+                State('narrowC-dropdown','value'),
+                State('capabilities-dropdown','value')])
 def set_input_score(click,score,weight,qn,qdata,sdata,ndata,value):
     if click:
         net = score*weight
-        figure=set_tpl_assessment_plot_subcat(value)
-        return html.H6(f'Question Score:  {net}'),figure
-    else:
-        ut = load_user_template()
+        return html.H6(f'Input Score:  {net}'),
 
-        try:
-            net = ut.loc[value,ndata,sdata].iloc[qn]['Input Score']
-       
-
-        except (AttributeError,ValueError) as e:
-            net = ut.loc[value,ndata,sdata]['Input Score']
-        figure=set_tpl_assessment_plot_subcat(value)
-			
-        return html.H6(f'Question Score:  {net}'),figure
 
 @app.callback(Output('dummy-out-2','children'),
                 [Input('contribution-weight','value')],
 				[State('numQuestions-dropdown','value'),
-				State('qGroup-store','data'),
-				State('specificC-store','data'),
-                State('narrowC-store','data'),
-                State('subCats-store','data')])
-def sub_new_scores(spWeight,qn,qdata,sdata,ndata,value):
-    if value:
-        ut = load_user_template()
+				State('qGroup-dropdown','value'),
+				State('specificC-dropdown','value'),
+                State('narrowC-dropdown','value'),
+                State('capabilities-dropdown','value'),
+				State('session-id','children')])
+def sub_new_scores(spWeight,qn,qdata,sdata,ndata,value,sid):
+	if value:
+       
+		df = load_user_template(sid)
+		qIdx = df[(df[idxCols[0]]==value)&(df[idxCols[1]]==ndata)&(df[idxCols[2]]==sdata)].iloc[qn]['Unnamed: 0']
 
-        try:
-            ut.loc[value,ndata,sdata].iloc[qn]['SpecCap Weight'] = spWeight
+		df.loc[qIdx,'SpecCap Weight'] = spWeight
 
-        except (AttributeError,ValueError) as e:
-            ut.loc[value,ndata,sdata]['SpecCap Weight'] = spWeight
-        
-        save_user_template(ut)
+		save_user_template(df,sid)
         
 
 
