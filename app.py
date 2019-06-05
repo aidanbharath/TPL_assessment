@@ -128,7 +128,46 @@ def set_tpl_assessment_options(data,sid,Div):
 		return Div
 
 # Begin new callback for plot
-    
+
+## Rework it with new setup
+
+@app.callback(Output('graph-1-div','children'),
+                [Input('tpl-assessment-store','data')],
+				#Input('standard-load-button','n_clicks')],
+				[State('session-id','children')])
+def set_tpl_assessment_plot(capabilities,sid):
+	if capabilities:
+		inpt = calc_input_scores(sid)
+		
+
+		traces = []
+		
+		for cap in inpt.index.get_level_values(0).unique().values:
+			mean = inpt.loc[cap,'Input Score'].sum()
+			traces.append({'x':[cap],'y':[mean],'name':cap,'type':'bar'})
+
+		x,y = [],[]
+		for i in traces:
+			x.append(i['x'][:][0])
+			y.append(i['y'][:][0])
+		
+		data = [{'x':x,'y':y,'type':'bar'}]
+		print(data)
+		layout = {
+			'title': 'TPL Capabilities Score',
+			'showlegend': False,
+			'barmode':'stack'
+			}
+		#figure = {'data':data,'layout':layout}
+		figure = go.Figure(data=data,layout=layout)
+		
+		
+		return dcc.Graph(figure=figure,style={'width':'100%','height':400},id='graph-2',className='four columns')
+		#dcc.Graph(id='graph-2',className='four columns'),
+		#dcc.Graph(id='graph-3',className='four columns')
+
+
+'''
 @app.callback(Output('q1-holdernew','children'),
                 [Input('tpl-assessment-store','data')])
 def set_tpl_assessment_plot(capabilities):
@@ -136,7 +175,7 @@ def set_tpl_assessment_plot(capabilities):
        
         plot_options=[{'label':capabilities,'value':[10,10,10,10,10,10,10],'type':'pie',}]
         #print(plot_options)
-        df=calc_input_scores()
+        df=calc_input_scores(sid)
         
         df2=calc_third_level_group_score()
         df3=calc_second_level_group_score()
@@ -174,12 +213,12 @@ def set_tpl_assessment_plot(capabilities):
                         className='eleven columns'
                         ),             
                         
-
+'''
 #end plot callback
 
 
 # Begin new callback for plot-2
-    
+'''
 @app.callback(Output('q2-holdernew','children'),
                 [Input('capabilities-dropdown','value')])
 def set_tpl_assessment_plot_subcat(options):
@@ -227,7 +266,7 @@ def set_tpl_assessment_plot_subcat(options):
                         className='eleven columns'
                         ),             
                         
-
+'''
 #end plot callback
 
 ################################
@@ -321,7 +360,7 @@ def set_tpl_assessment_second_level_selection_3(sdata,ndata,value,sid):
 
 	
 # Begin new callback for plot-3
-    
+'''
 @app.callback(Output('q3-holdernew','children'),
                 [Input('narrowC-dropdown','value')],
                 [State('subCats-store','data')])
@@ -372,7 +411,7 @@ def set_tpl_assessment_plot_subcat(ndata,value):
                         className='eleven columns'
                         ),             
                         
-
+'''
 #end plot callback
 
 @app.callback(Output('bot-left-div-2','children'),
@@ -563,9 +602,9 @@ def sub_new_scores(spWeight,qn,qdata,sdata,ndata,value,sid):
 
 if __name__ == '__main__':
     ## Run in Browser
-    #app.run()
+    app.run()
     ## run standalone
 
-    init_gui(app,window_title='TPL Assessment Stand Alone Tool',
-				width=800,height=800,icon='./images/logo.png')
+    #init_gui(app,window_title='TPL Assessment Stand Alone Tool',
+	#			width=800,height=800,icon='./images/logo.png')
 
