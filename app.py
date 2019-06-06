@@ -136,33 +136,34 @@ def set_tpl_assessment_options(data,sid,Div):
 				#Input('standard-load-button','n_clicks')],
 				[State('session-id','children')])
 def set_tpl_assessment_plot(capabilities,sid):
-	if capabilities:
-		inpt = calc_input_scores(sid)
+    if capabilities:
+        inpt = calc_input_scores(sid)
 		
 
-		traces = []
+        traces = []
 		
-		for cap in inpt.index.get_level_values(0).unique().values:
-			mean = inpt.loc[cap,'Input Score'].sum()
-			traces.append({'x':[cap],'y':[mean],'name':cap,'type':'bar'})
+        for cap in inpt.index.get_level_values(0).unique().values:
+            print(cap)
+            mean = inpt.loc[cap,'Input Score'].sum()
+            traces.append({'x':[cap],'y':[mean],'name':cap,'type':'bar'})
 
-		x,y = [],[]
-		for i in traces:
-			x.append(i['x'][:][0])
-			y.append(i['y'][:][0])
+        x,y = [],[]
+        for i in traces:
+            x.append(i['x'][:][0])
+            y.append(i['y'][:][0])
 		
-		data = [{'x':x,'y':y,'type':'bar'}]
-		print(data)
-		layout = {
+        data = [{'x':x,'y':y,'type':'bar'}]
+		#print(data)
+        layout = {
 			'title': 'TPL Capabilities Score',
 			'showlegend': False,
 			'barmode':'stack'
 			}
 		#figure = {'data':data,'layout':layout}
-		figure = go.Figure(data=data,layout=layout)
+        figure = go.Figure(data=data,layout=layout)
 		
 		
-		return dcc.Graph(figure=figure,style={'width':'100%','height':400},id='graph-2',className='four columns')
+        return dcc.Graph(figure=figure,style={'width':'100%','height':400},id='graph-1-div',className='four columns')
 		#dcc.Graph(id='graph-2',className='four columns'),
 		#dcc.Graph(id='graph-3',className='four columns')
 
@@ -217,60 +218,13 @@ def set_tpl_assessment_plot(capabilities):
 #end plot callback
 
 
-# Begin new callback for plot-2
-'''
-@app.callback(Output('q2-holdernew','children'),
-                [Input('capabilities-dropdown','value')])
-def set_tpl_assessment_plot_subcat(options):
-    while options:
-       
-        
-       # plot_options=[{'label':capabilities,'value':[10,10,10,10,10,10,10],'type':'pie',}]
-        #print(options)
-        df=calc_input_scores()
-        
-        df2=calc_third_level_group_score()
-        df3=calc_second_level_group_score()
-        
-        #print(df3.loc[options,'RW'])
-        cats=[]
-#        for j in capabilities:
-#            #print(j)
-        baseTemplate = base_load_template()
-        subCats = baseTemplate.loc[options].index.get_level_values(0).unique().values
-#            cats=np.append([cats],[subCats])
-        #print(df3.loc[options,'Score'])    
-       # trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
-        #trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
-        #print(df3['Net'])
-   
-        return html.Div([
-                        
-                        #dcc.Graph(id='test-graph'),
-                        html.Div(dcc.Graph(
-                                id='test-graph2',
-                                #figure={ 'data' : [trace1,trace2],
-                                       figure={'data': [{'x': subCats,'y': df3.loc[options,'Score'],'type' : 'bar',
-                                                 'hoverinfo':'labels + df2["Score"]',},],
-                                        'layout': {
-                                                'title': 'TPL Sub_Catagory Score',
-                                                'showlegend': False},
-                                        }
-        
-                                    )
-                               # id='left-div-new'
-                                )
-                        
-                                ],
-                               # id='q1-holdernew',
-                        className='eleven columns'
-                        ),             
+
                         
 '''
 #end plot callback
 
 ################################
-'''
+
 Now we would like to start narrowing down what we are looking at
 selections are made possible through successive dropdowns
 '''
@@ -287,25 +241,54 @@ def break_left_hidden(value):
 				[State('session-id','children')])
 def set_tpl_assessment_second_level_selection_1(value,sid):
 
-	if value:        
-		df = init_cache_dataframe(sid)
-		subCats = df[df[idxCols[0]]==value][idxCols[1]].unique()
-		options = [{'label':subcat,'value':subcat} for subcat in subCats]
+    if value:
+        print('y')        
+        df = init_cache_dataframe(sid)
+        subCats = df[df[idxCols[0]]==value][idxCols[1]].unique()
+        options = [{'label':subcat,'value':subcat} for subcat in subCats]
 
-		dropDowns = [dcc.Dropdown(id='narrowC-dropdown',
+        dropDowns = [dcc.Dropdown(id='narrowC-dropdown',
 								options=options,
 								value=None,
 								placeholder="Select Device Capabilities"
 								)]
-		return dropDowns
-	else:
-		return  [dcc.Dropdown(id='narrowC-dropdown',
+        return dropDowns
+    else:
+        return  [dcc.Dropdown(id='narrowC-dropdown',
 						options=[{'label':'Select Device Capabilities',
 										'value':'NoCG'}],
 						value=None,
 						placeholder="Select Device Capabilities"
 						)]
 
+# Begin new callback for plot-2
+#'''
+@app.callback(Output('graph-2','children'),
+                [Input('capabilities-dropdown','value')],
+                [State('session-id','children')])
+def set_tpl_assessment_plot_subcat(value,sid):
+    if value:
+        #print(value)
+       
+        baseTemplate = base_load_template()
+        subCats = baseTemplate.loc[value].index.get_level_values(0).unique().values
+#        print(subCats)
+        df3=calc_second_level_group_score(sid)
+        #print(df3.loc[value,'Net'])
+##            
+#   
+        return dcc.Graph(figure={'data': [{'x': subCats,'y': df3.loc[value,'Net'],'type' : 'bar',
+                                                 'hoverinfo':'labels + df2["Score"]',},],
+                                        'layout': {
+                                                'title': value,
+                                                'showlegend': False},
+                                        }
+        
+                                    )
+                               # id='left-div-new'
+                             
+                        
+                                  
 @app.callback(Output('left-div-2','children'),
                 [Input('narrowC-dropdown','value')],
                 [State('capabilities-dropdown','value'),
@@ -360,58 +343,56 @@ def set_tpl_assessment_second_level_selection_3(sdata,ndata,value,sid):
 
 	
 # Begin new callback for plot-3
-'''
-@app.callback(Output('q3-holdernew','children'),
+
+@app.callback(Output('graph-3','children'),
                 [Input('narrowC-dropdown','value')],
-                [State('subCats-store','data')])
-def set_tpl_assessment_plot_subcat(ndata,value):
-    while value:
+                [State('capabilities-dropdown','value'),
+                State('session-id','children')])
+def set_tpl_assessment_plot_narrowcat(ndata,value,sid):
+    if value:
         print(value)
         print(ndata)
         
 
-        df=calc_input_scores()
-        
-        df2=calc_third_level_group_score()
-        df3=calc_second_level_group_score()
-        
-        #print(df3.loc[options,'RW'])
-        cats=[]
-#        for j in capabilities:
-#            #print(j)
-        userTemplate = load_user_template()
+        df=calc_input_scores(sid)
+#        
+#        df2=calc_third_level_group_score(sid)
+#        df3=calc_second_level_group_score(sid)
+#        
+#        #print(df3.loc[options,'RW'])
+#        cats=[]
+##        for j in capabilities:
+##            #print(j)
+#        #userTemplate = load_user_template()
         subcats=df.loc[value].loc[ndata].index.get_level_values(0).unique().values
-        print(subcats)
-        #subCats = userTemplate.loc[value,ndata].index.get_level_values(0).unique().values
-#            cats=np.append([cats],[subCats])
-        #print(userTemplate['Narrow Capability'])    
-       # trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
-        #trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
-        #print(df3['Net'])
-   
-        return html.Div([
-                        
-                        #dcc.Graph(id='test-graph'),
-                        html.Div(dcc.Graph(
-                                id='testgraph-3',
-                                #figure={ 'data' : [trace1,trace2],
-                                       figure={'data': [{'x': subcats,'y': df.loc[value].loc[ndata]['Score'],'type' : 'bar',
-                                                 'hoverinfo':'labels + df2["Score"]',},],
+        y=df.loc[value].loc[ndata]['Input Score']
+        colors=list()
+        for cat in y:
+            if cat <= 3:
+                colors.append('red')
+            if cat > 3 and cat <= 6:
+                colors.append('yellow')
+            if cat > 6:
+                colors.append('green')
+        
+#        print(df.loc[value].loc[ndata]['Score'])
+#        #subCats = userTemplate.loc[value,ndata].index.get_level_values(0).unique().values
+##            cats=np.append([cats],[subCats])
+#        #print(userTemplate['Narrow Capability'])    
+#       # trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+#        #trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+#        #print(df3['Net'])
+#   
+        return dcc.Graph(figure={'data': [{'x': subcats,'y': y,'type' : 'bar',
+                                                 'hoverinfo':'labels + df2["Score"]','marker':dict(color=colors)},],
                                         'layout': {
-                                                'title': 'TPL Narow Capability',
+                                                'title': 'ndata',
                                                 'showlegend': False},
                                         }
         
-                                    )
-                               # id='left-div-new'
-                                )
-                        
-                                ],
-                               # id='q1-holdernew',
-                        className='eleven columns'
-                        ),             
-                        
-'''
+                                    ),
+#                              
+
 #end plot callback
 
 @app.callback(Output('bot-left-div-2','children'),
@@ -606,5 +587,5 @@ if __name__ == '__main__':
     ## run standalone
 
     #init_gui(app,window_title='TPL Assessment Stand Alone Tool',
-	#			width=800,height=800,icon='./images/logo.png')
+				#width=800,height=800,icon='./images/logo.png')
 
