@@ -191,9 +191,10 @@ def left_div_preamble():
 
 def plot_row_preable():
 	return html.Div([
-			html.Div(id='graph-1-div',className='four columns'),
-			html.Div(id='graph-2',className='four columns'),
-			html.Div(id='graph-3',className='four columns')
+			html.Div(id='graph-1-div',className='three columns'),
+			html.Div(id='graph-2',className='three columns'),
+			html.Div(id='graph-3',className='three columns'),
+            html.Div(id='graph-4',className='three columns')
 		],id='plot-row-div',className='twelve columns')
 
 

@@ -386,7 +386,7 @@ def set_tpl_assessment_plot_narrowcat(ndata,value,sid):
         return dcc.Graph(figure={'data': [{'x': subcats,'y': y,'type' : 'bar',
                                                  'hoverinfo':'labels + df2["Score"]','marker':dict(color=colors)},],
                                         'layout': {
-                                                'title': 'ndata',
+                                                'title': ndata,
                                                 'showlegend': False},
                                         }
         
@@ -409,7 +409,61 @@ def set_specific_definition(sdata,ndata,value,sid):
 		return [html.H6(f'{sdata} Definition:'),
 				html.Div(description['nCapability description'].unique())]
 
+# Begin new callback for plot-4
 
+@app.callback(Output('graph-4','children'),
+                [Input('specificC-dropdown','value')],
+                [State('narrowC-dropdown','value'),
+                State('capabilities-dropdown','value'),
+                State('session-id','children')])
+def set_tpl_assessment_plot_specificcat(sdata,ndata,value,sid):
+    if value:
+        print(value)
+        print(ndata)
+        print(sdata)
+        
+
+        df=calc_second_level_group_score(sid)
+#        
+#        df2=calc_third_level_group_score(sid)
+#        df3=calc_second_level_group_score(sid)
+#        
+#        #print(df3.loc[options,'RW'])
+#        cats=[]
+##        for j in capabilities:
+##            #print(j)
+#        #userTemplate = load_user_template()
+        subcats=df.loc[value].loc[ndata].loc[sdata].index.get_level_values(0).unique().values
+        y=df.loc[value].loc[ndata].loc[sdata]['Input Score']
+        print(y)
+#        colors=list()
+#        for cat in y:
+#            if cat <= 3:
+#                colors.append('red')
+#            if cat > 3 and cat <= 6:
+#                colors.append('yellow')
+#            if cat > 6:
+#                colors.append('green')
+        
+#        print(df.loc[value].loc[ndata]['Score'])
+#        #subCats = userTemplate.loc[value,ndata].index.get_level_values(0).unique().values
+##            cats=np.append([cats],[subCats])
+#        #print(userTemplate['Narrow Capability'])    
+#       # trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+#        #trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
+#        #print(df3['Net'])
+#   
+        return dcc.Graph(figure={'data': [{'x': subcats,'y': y,'type' : 'bar',
+                                                 'hoverinfo':'labels + df2["Score"]','marker':dict(color=colors)},],
+                                        'layout': {
+                                                'title': sdata,
+                                                'showlegend': False},
+                                        }
+        
+                                    ),
+#                              
+
+#end plot callback
 @app.callback(Output('bot-left-div-3','children'),
                 [Input('qGroup-dropdown','value')],
                 [State('specificC-dropdown','value'),
