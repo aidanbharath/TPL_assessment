@@ -132,40 +132,43 @@ def set_tpl_assessment_options(data,sid,Div):
 ## Rework it with new setup
 
 @app.callback(Output('graph-1-div','children'),
-                [Input('tpl-assessment-store','data')],
+                [Input('capabilities-dropdown','value')],
+                [State('tpl-assessment-store','data'),
 				#Input('standard-load-button','n_clicks')],
-				[State('session-id','children')])
-def set_tpl_assessment_plot(capabilities,sid):
+				State('session-id','children')])
+def set_tpl_assessment_plot(value,capabilities,sid):
     if capabilities:
         inpt = calc_input_scores(sid)
 		
 
         traces = []
+        colors=list()
 		
         for cap in inpt.index.get_level_values(0).unique().values:
             #print(inpt.loc[cap,'Input Score'])
             mean = inpt.loc[cap,'Input Score'].mean()
             traces.append({'x':[cap],'y':[mean],'name':cap,'type':'bar'})
+            if mean <= 3:
+                colors.append('red')
+            if mean > 3 and mean <= 6:
+                colors.append('yellow')
+            if mean > 6:
+                colors.append('green')
 
         x,y = [],[]
         for i in traces:
             x.append(i['x'][:][0])
             y.append(i['y'][:][0])
 		
-        data = [{'x':x,'y':y,'type':'bar'}]
-        #print(inpt.index.get_level_values(0).unique().values)
-        layout = {
-			'title': 'TPL Capabilities Score',
-			'showlegend': False,
-			'barmode':'stack'
-			}
-		#figure = {'data':data,'layout':layout}
-        figure = go.Figure(data=data,layout=layout)
-		
-		
-        return dcc.Graph(figure=figure,style={'width':'100%'},id='graph-1-div',className='four columns')
-		#dcc.Graph(id='graph-2',className='four columns'),
-		#dcc.Graph(id='graph-3',className='four columns')
+#      
+        return dcc.Graph(figure={'data': [{'x': x,'y': y,'type' : 'bar',
+                                                 'hoverinfo':'labels + df2["Score"]','marker':dict(color=colors)},],
+                                        'layout': {
+                                                'title': 'TPL Capabilities Score',
+                                                'showlegend': False,'yaxis':{'title':'Score'}},
+                                        },style={'width':'100%'}
+        
+                                    )
 
 
 
@@ -228,11 +231,18 @@ def set_tpl_assessment_plot_subcat(value,sid):
         traces=[]
 #        print(subCats)
         df3=calc_input_scores(sid)
+        colors=list()
         for cap in baseTemplate.loc[value].index.get_level_values(0).unique().values:
             #print(df3.loc[value].loc[cap,'Input Score'])
             mean = df3.loc[value].loc[cap,'Input Score'].mean()
             #print(mean)
             traces.append({'x':[cap],'y':[mean],'name':cap,'type':'bar'})
+            if mean <= 3:
+                colors.append('red')
+            if mean > 3 and mean <= 6:
+                colors.append('yellow')
+            if mean > 6:
+                colors.append('green')
 
         x,y = [],[]
         for i in traces:
@@ -241,11 +251,11 @@ def set_tpl_assessment_plot_subcat(value,sid):
 		
         
         return dcc.Graph(figure={'data': [{'x': subCats,'y': y,'type' : 'bar',
-                                                 'hoverinfo':'labels + df2["Score"]',},],
+                                                 'hoverinfo':'labels + df2["Score"]','marker':dict(color=colors)},],
                                         'layout': {
                                                 'title': value,
-                                                'showlegend': False},
-                                        }
+                                                'showlegend': False,'yaxis':{'title':'Score'}},
+                                        },style={'width':'100%'}
         
                                     )
                                # id='left-div-new'
@@ -318,41 +328,35 @@ def set_tpl_assessment_plot_narrowcat(ndata,value,sid):
         
 
         df=calc_input_scores(sid)
-#        
-#        df2=calc_third_level_group_score(sid)
-#        df3=calc_second_level_group_score(sid)
-#        
-#        #print(df3.loc[options,'RW'])
-#        cats=[]
-##        for j in capabilities:
-##            #print(j)
-#        #userTemplate = load_user_template()
-        subcats=df.loc[value].loc[ndata].index.get_level_values(0).unique().values
-        y=df.loc[value].loc[ndata]['Input Score'].mean()
-        print(y)
+        traces=[]
+
         colors=list()
-        for cat in y:
-            if cat <= 3:
+        for cap in df.loc[value].loc[ndata].index.get_level_values(0).unique().values:
+            #print(df3.loc[value].loc[cap,'Input Score'])
+            mean = df.loc[value].loc[ndata].loc[cap,'Input Score'].mean()
+            #print(mean)
+            traces.append({'x':[cap],'y':[mean],'name':cap,'type':'bar'})
+            if mean <= 3:
                 colors.append('red')
-            if cat > 3 and cat <= 6:
+            if mean > 3 and mean <= 6:
                 colors.append('yellow')
-            if cat > 6:
+            if mean > 6:
                 colors.append('green')
-        
-#        print(df.loc[value].loc[ndata]['Score'])
-#        #subCats = userTemplate.loc[value,ndata].index.get_level_values(0).unique().values
-##            cats=np.append([cats],[subCats])
-#        #print(userTemplate['Narrow Capability'])    
-#       # trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
-#        #trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
-#        #print(df3['Net'])
+
+        x,y = [],[]
+        for i in traces:
+            x.append(i['x'][:][0])
+            y.append(i['y'][:][0])
+
+        subcats=df.loc[value].loc[ndata].index.get_level_values(0).unique().values
+#        
 #   
         return dcc.Graph(figure={'data': [{'x': subcats,'y': y,'type' : 'bar',
                                                  'hoverinfo':'labels + df2["Score"]','marker':dict(color=colors)},],
                                         'layout': {
                                                 'title': ndata,
-                                                'showlegend': False},
-                                        }
+                                                'showlegend': False,'yaxis':{'title':'Score'}},
+                                        },style={'width':'100%'}
         
                                     ),
 #                              
@@ -389,14 +393,6 @@ def set_tpl_assessment_plot_specificcat(sdata,ndata,value,sid):
 
         df=calc_second_level_group_score(sid)
 #        
-#        df2=calc_third_level_group_score(sid)
-#        df3=calc_second_level_group_score(sid)
-#        
-#        #print(df3.loc[options,'RW'])
-#        cats=[]
-##        for j in capabilities:
-##            #print(j)
-#        #userTemplate = load_user_template()
         subcats=df.loc[value].loc[ndata].loc[sdata].index.get_level_values(0).unique().values
         y=df.loc[value].loc[ndata].loc[sdata]['Input Score']
         print(y)
@@ -409,20 +405,14 @@ def set_tpl_assessment_plot_specificcat(sdata,ndata,value,sid):
             if cat > 6:
                 colors.append('green')
         
-#        print(df.loc[value].loc[ndata]['Score'])
-#        #subCats = userTemplate.loc[value,ndata].index.get_level_values(0).unique().values
-##            cats=np.append([cats],[subCats])
-#        #print(userTemplate['Narrow Capability'])    
-#       # trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
-#        #trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
-#        #print(df3['Net'])
+#
 #   
         return dcc.Graph(figure={'data': [{'x': subcats,'y': y,'type' : 'bar',
                                                  'hoverinfo':'labels + df2["Score"]','marker':dict(color=colors)},],
                                         'layout': {
                                                 'title': sdata,
-                                                'showlegend': False},
-                                        }
+                                                'showlegend': False,'yaxis':{'title':'Score'}},
+                                        },style={'width':'100%'}
         
                                     ),
 #                              
