@@ -3,8 +3,10 @@ import load
 from groupScoreTemplates import gst, hst
 from pandas import Series
 
+idxCols = ['Broad Capability','Narrow Capability','Specific Capability','Question Group Description']
 
-def calc_input_scores():
+
+def calc_input_scores(sid):
     '''
     This functions replicates the values found in the 'input score' section of 
     the spreadsheet.
@@ -12,15 +14,16 @@ def calc_input_scores():
     return frame still has the indexing available
     '''
 
-    userDF = load.load_user_template()
-    return userDF.groupby(level=[0,1,2]).mean()
+    userDF = load.load_user_template(sid)
+    userDF = userDF.groupby(idxCols).mean()
+    return userDF
 
 def calc_relative_weight(df):
     for name,group in df.groupby(level=[0,1]):
         df.loc[name,'RW'] = group['SpecCap Weight']/group['Input Score'].shape[0]
     return df
 
-def calc_second_level_group_score():
+def calc_second_level_group_score(sid):
     '''
     I'm finding it a little tricky to find a rhyme or reason to how these are 
     calculated. 
@@ -31,7 +34,7 @@ def calc_second_level_group_score():
     just the sum of the net scores
     '''
 
-    meansDF = calc_relative_weight(calc_input_scores())
+    meansDF = calc_relative_weight(calc_input_scores(sid))
 
     groups = meansDF.groupby(level=[0,1])
     for name,group in groups:
@@ -46,9 +49,9 @@ def calc_second_level_group_score():
     
     return meansDF
 
-def calc_third_level_group_score():
+def calc_third_level_group_score(sid):
 
-    meansDF = calc_second_level_group_score()
+    meansDF = calc_second_level_group_score(sid)
 
     names = meansDF.index.get_level_values(0).unique()
     df = Series()

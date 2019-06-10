@@ -89,6 +89,7 @@ def bot_Divs_Base():
                                 hidden=True,
 
                                 className='twelve columns'),
+								plot_row_preable(),
 								html.Div([
 
                                 html.Div([
@@ -188,6 +189,18 @@ def left_div_preamble():
                         )
         ]
 
+def plot_row_preable():
+	return html.Div([
+			html.Div(id='graph-1-div',className='three columns'),
+			html.Div(id='graph-2',className='three columns'),
+			html.Div(id='graph-3',className='three columns'),
+            html.Div(id='graph-4',className='two columns'),
+            html.Div([
+                    html.Div('High: 7-9', style={'color': 'green', 'fontSize': 25,}),
+                    html.Div('Med: 4-6', style={'color': 'yellow','fontSize':25,}),
+                    html.Div('Low: 0-3', style={'color':'red','fontSize':25})],className='one column')
+		],id='plot-row-div',className='twelve columns')
+
 
 def right_div_preamble():
     
@@ -200,11 +213,7 @@ def right_div_preamble():
                         ),
                     html.Div(id='q2-holdernew',className='eleven columns'),
                     html.Div(id='q3-holdernew',className='eleven columns'),
-                        
-#                                               
- 
-                                    
-                                    ]                                                                
+            ]                                                                
                             
 
 def bot_right_div_1_preamble():
