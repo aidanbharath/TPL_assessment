@@ -3,7 +3,7 @@ import load
 from groupScoreTemplates import gst, hst
 from pandas import Series
 
-idxCols = ['Broad Capability','Narrow Capability','Specific Capability']
+idxCols = ['Broad Capability','Narrow Capability','Specific Capability','Question Group Description']
 
 
 def calc_input_scores(sid):
