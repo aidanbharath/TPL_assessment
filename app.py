@@ -143,8 +143,8 @@ def set_tpl_assessment_plot(capabilities,sid):
         traces = []
 		
         for cap in inpt.index.get_level_values(0).unique().values:
-            print(cap)
-            mean = inpt.loc[cap,'Input Score'].sum()
+            #print(inpt.loc[cap,'Input Score'])
+            mean = inpt.loc[cap,'Input Score'].mean()
             traces.append({'x':[cap],'y':[mean],'name':cap,'type':'bar'})
 
         x,y = [],[]
@@ -153,7 +153,7 @@ def set_tpl_assessment_plot(capabilities,sid):
             y.append(i['y'][:][0])
 		
         data = [{'x':x,'y':y,'type':'bar'}]
-		#print(data)
+        #print(inpt.index.get_level_values(0).unique().values)
         layout = {
 			'title': 'TPL Capabilities Score',
 			'showlegend': False,
@@ -163,59 +163,12 @@ def set_tpl_assessment_plot(capabilities,sid):
         figure = go.Figure(data=data,layout=layout)
 		
 		
-        return dcc.Graph(figure=figure,style={'width':'100%','height':400},id='graph-1-div',className='four columns')
+        return dcc.Graph(figure=figure,style={'width':'100%'},id='graph-1-div',className='four columns')
 		#dcc.Graph(id='graph-2',className='four columns'),
 		#dcc.Graph(id='graph-3',className='four columns')
 
 
-'''
-@app.callback(Output('q1-holdernew','children'),
-                [Input('tpl-assessment-store','data')])
-def set_tpl_assessment_plot(capabilities):
-    if capabilities:
-       
-        plot_options=[{'label':capabilities,'value':[10,10,10,10,10,10,10],'type':'pie',}]
-        #print(plot_options)
-        df=calc_input_scores(sid)
-        
-        df2=calc_third_level_group_score()
-        df3=calc_second_level_group_score()
-        #print(df2)
-        cats=[]
-        for j in capabilities:
-            #print(j)
-            baseTemplate = base_load_template()
-            subCats = baseTemplate.loc[j].index.get_level_values(0).unique().values
-            cats=np.append([cats],[subCats])
-            
-        trace1 = figure={'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
-        trace2= figure= {'x': capabilities, 'y': df3['Net'], 'type' : 'bar'}
-        #print(df3['Net'])
-        
-        return html.Div([
-                        
-                        #dcc.Graph(id='test-graph'),
-                        html.Div(dcc.Graph(
-                                id='test-graph',
-                                #figure={ 'data' : [trace1,trace2],
-                                       figure={'data': [{'x': capabilities,'y': df2[capabilities],'type' : 'bar',
-                                                 'hoverinfo':'labels + df2["Scores"]',},],
-                                        'layout': {
-                                                'title': 'TPL Capabilities Score',
-                                                'showlegend': False},
-                                        }
-        
-                                    )
-                               # id='left-div-new'
-                                )
-                        
-                                ],
-                               # id='q1-holdernew',
-                        className='eleven columns'
-                        ),             
-                        
-'''
-#end plot callback
+
 
 
 
@@ -242,7 +195,7 @@ def break_left_hidden(value):
 def set_tpl_assessment_second_level_selection_1(value,sid):
 
     if value:
-        print('y')        
+        #print('y')        
         df = init_cache_dataframe(sid)
         subCats = df[df[idxCols[0]]==value][idxCols[1]].unique()
         options = [{'label':subcat,'value':subcat} for subcat in subCats]
@@ -272,12 +225,22 @@ def set_tpl_assessment_plot_subcat(value,sid):
        
         baseTemplate = base_load_template()
         subCats = baseTemplate.loc[value].index.get_level_values(0).unique().values
+        traces=[]
 #        print(subCats)
-        df3=calc_second_level_group_score(sid)
-        #print(df3.loc[value,'Net'])
-##            
-#   
-        return dcc.Graph(figure={'data': [{'x': subCats,'y': df3.loc[value,'Net'],'type' : 'bar',
+        df3=calc_input_scores(sid)
+        for cap in baseTemplate.loc[value].index.get_level_values(0).unique().values:
+            #print(df3.loc[value].loc[cap,'Input Score'])
+            mean = df3.loc[value].loc[cap,'Input Score'].mean()
+            #print(mean)
+            traces.append({'x':[cap],'y':[mean],'name':cap,'type':'bar'})
+
+        x,y = [],[]
+        for i in traces:
+            x.append(i['x'][:][0])
+            y.append(i['y'][:][0])
+		
+        
+        return dcc.Graph(figure={'data': [{'x': subCats,'y': y,'type' : 'bar',
                                                  'hoverinfo':'labels + df2["Score"]',},],
                                         'layout': {
                                                 'title': value,
@@ -365,7 +328,8 @@ def set_tpl_assessment_plot_narrowcat(ndata,value,sid):
 ##            #print(j)
 #        #userTemplate = load_user_template()
         subcats=df.loc[value].loc[ndata].index.get_level_values(0).unique().values
-        y=df.loc[value].loc[ndata]['Input Score']
+        y=df.loc[value].loc[ndata]['Input Score'].mean()
+        print(y)
         colors=list()
         for cat in y:
             if cat <= 3:
@@ -436,14 +400,14 @@ def set_tpl_assessment_plot_specificcat(sdata,ndata,value,sid):
         subcats=df.loc[value].loc[ndata].loc[sdata].index.get_level_values(0).unique().values
         y=df.loc[value].loc[ndata].loc[sdata]['Input Score']
         print(y)
-#        colors=list()
-#        for cat in y:
-#            if cat <= 3:
-#                colors.append('red')
-#            if cat > 3 and cat <= 6:
-#                colors.append('yellow')
-#            if cat > 6:
-#                colors.append('green')
+        colors=list()
+        for cat in y:
+            if cat <= 3:
+                colors.append('red')
+            if cat > 3 and cat <= 6:
+                colors.append('yellow')
+            if cat > 6:
+                colors.append('green')
         
 #        print(df.loc[value].loc[ndata]['Score'])
 #        #subCats = userTemplate.loc[value,ndata].index.get_level_values(0).unique().values
