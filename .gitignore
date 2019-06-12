@@ -2,8 +2,10 @@
 *.xlsx
 *.pyc
 test.egg-info/*
-*.csv
-*cache/*
-*build/*
+*.exe
 *.spec
-*dist/*
+**/build
+**./dist/
+*.csv
+**/cache/
+**/static/
