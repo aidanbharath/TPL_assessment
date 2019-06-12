@@ -3,3 +3,7 @@
 *.pyc
 test.egg-info/*
 *.csv
+*cache/*
+*build/*
+*.spec
+*dist/*
